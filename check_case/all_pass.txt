@@ -106,3 +106,8 @@ tests/v1/worker/test_gpu_model_runner_v2.py
 tests/v1/worker/test_gpu_pcp_manager.py
 tests/v1/worker/test_kv_cache_allocation_scope.py
 tests/v1/worker/test_workspace.py
+tests/entrypoints/launchers/test_dp_supervisor.py
+tests/entrypoints/cohere/test_serving_streaming.py
+tests/entrypoints/cohere/test_serving_conversion.py
+tests/entrypoints/cohere/test_protocol.py
+tests/entrypoints/cohere/test_api_router.py

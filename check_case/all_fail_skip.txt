@@ -8,14 +8,9 @@ tests/distributed/test_kimi_linear_context_parallel.py
 tests/distributed/test_sharded_rdt_plan.py
 tests/distributed/test_sharded_rdt_producer.py
 tests/distributed/test_sharded_rdt_trainer.py
-tests/entrypoints/cohere/test_api_router.py
 tests/entrypoints/cohere/test_chat_v2.py
-tests/entrypoints/cohere/test_protocol.py
-tests/entrypoints/cohere/test_serving_conversion.py
-tests/entrypoints/cohere/test_serving_streaming.py
 tests/entrypoints/launchers/api_server/test_api_server_process_manager.py
 tests/entrypoints/launchers/api_server/test_multi_api_servers.py
-tests/entrypoints/launchers/test_dp_supervisor.py
 tests/entrypoints/launchers/test_run_batch.py
 tests/entrypoints/launchers/test_shutdown.py
 tests/entrypoints/launchers/test_ssl_cert_refresher.py

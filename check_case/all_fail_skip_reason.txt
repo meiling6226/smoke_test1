@@ -1,12 +1,12 @@
-tests/compile/passes/test_rmsnorm_reshape_fusion.py              # skip 平台不匹配，CUDA图，test_msnorm_reshape_fusion.py（测试 msnorm 算子融合
-tests/compile/test_deepstack_input_contract.py                   #Torch not compiled with CUDA enabled
-tests/distributed/test_custom_all_gather_reduce_scatter.py       # skip 平台不支持NPU Triton causal_conv1d update is unavailable
-tests/distributed/test_dcp_direct_a2a_lse_reduce.py              # 同上
-tests/distributed/test_eplb_quant_scale_consistency.py           # 同上
-tests/distributed/test_file_store.py                             #------AssertionError: Current vLLM config is not set. This typically means get_current_vllm_config() was called outside of a set_current_vllm_config() context, or a CustomOp was instantiated at module import time or model forward time when config is not set. For tests that directly test custom ops/modules, use the 'default_vllm_config' pytest fixture from tests/conftest.py.
-tests/distributed/test_kimi_linear_context_parallel.py           #重跑 -----dp 2机 待重跑
-tests/distributed/test_sharded_rdt_plan.py                       # skip 平台不支持
-tests/distributed/test_sharded_rdt_producer.py                   # ------ray 库不支持， ValueError: Invalid tensor transport NIXL, must be one of ['OBJECT_STORE', 'NCCL', 'GLOO'].
+tests/compile/passes/test_rmsnorm_reshape_fusion.py              # skip RMSNorm 的 reshape 融合算子不支持  ::test_rmsnorm_reshape_fusion SKIPPED
+tests/compile/test_deepstack_input_contract.py                   # AssertionError: Torch not compiled with CUDA enabled
+tests/distributed/test_custom_all_gather_reduce_scatter.py       # skip ::test_mnnvl_lamport_stage_cleanup SKIPPED  在 Ascend NPU 上，GPU 之间的互联使用的是 HCCS 而非 NVLink。因此，针对 NVLink 特定通信逻辑（如 Lamport 算法的某个阶段清理）的测试，在 NPU 上无法运行。
+tests/distributed/test_dcp_direct_a2a_lse_reduce.py              # 重跑----  pip install multiprocess  ModuleNotFoundError: No module named 'multiprocess'
+tests/distributed/test_eplb_quant_scale_consistency.py           # skip::test_nvfp4_eplb_rearrangement_matches_reload[flashinfer_cutedsl]   flashinfer 是一个专门为 NVIDIA GPU 优化的推理加速库，cutedsl 和 trtllm 都是它的特定后端。
+tests/distributed/test_file_store.py                             # ****兼容性 Bug：vllm-ascend 的 calculate_dp_buffer_size() 对 vllm_config 的存在性做了过强的假设，导致在没有完整模型配置的测试场景下直接崩溃。 ------AssertionError: Current vLLM config is not set. This typically means get_current_vllm_config() was called outside of a set_current_vllm_config() context, or a CustomOp was instantiated at module import time or model forward time when config is not set. For tests that directly test custom ops/modules, use the 'default_vllm_config' pytest fixture from tests/conftest.py.
+tests/distributed/test_kimi_linear_context_parallel.py           #重跑 --- ValueError: Free memory on device -- DP group leader: node_rank=0, node_rank_within_dp=0, master_addr=127.0.0.1, mq_connect_ip=173.125.1.2 (local), world_size=2, local_world_size=2
+tests/distributed/test_sharded_rdt_plan.py                       # 重跑----TestBakeOnARealModel 类，参数化里指定了具体的模型架构：qga-dense、moe、mla-moe。---缺少真实模型
+tests/distributed/test_sharded_rdt_producer.py                   # ------ Ray 库不识别 "nixl" 这个张量传输后端， ValueError: Invalid tensor transport NIXL, must be one of ['OBJECT_STORE', 'NCCL', 'GLOO'].
 tests/distributed/test_sharded_rdt_trainer.py                    # ray库不支持，同上
 tests/entrypoints/cohere/test_api_router.py                      #重跑------pass
 tests/entrypoints/cohere/test_chat_v2.py                         #重跑------HuggingFaceTB/SmolLM2-135M-Instruct 不是一个有效的 HuggingFace 仓库 ID 或本地目录
@@ -29,31 +29,31 @@ tests/entrypoints/serve/instrumentator/test_uds.py                  # 重跑  --
 tests/entrypoints/serve/middleware/test_optional_middleware.py      # 重跑 ----同上
 tests/entrypoints/speech_to_text/transcription/test_chunk_timestamp_offset.py  # 重跑----同上
 tests/evals/qwen4_exp/test_accuracy.py                             # 重跑----同上
-tests/jit_monitor/test_hooks_gpu.py                                  # skip 平台不支持
-tests/jit_monitor/test_no_runtime_jit.py                             # skip 平台不支持
-tests/kernels/attention/test_amx_mla.py
-tests/kernels/attention/test_kimi_k3_mla_fused_epilogue.py
-tests/kernels/attention/test_kimi_k3_mla_key_concat_kv_cache.py
+tests/jit_monitor/test_hooks_gpu.py                                  # skip 在 Ascend NPU 上，JIT 编译的机制和 GPU 完全不同，测试代码内部的 @pytest.mark.skipif 条件判定当前平台不适用，于是直接跳过。
+tests/jit_monitor/test_no_runtime_jit.py                             # skip 重跑------这些测试需要加载真实的模型权重，而测试代码内部的 @pytest.mark.skipif 条件判定当前环境没有这些模型，于是直接跳过。
+tests/kernels/attention/test_amx_mla.py                              # skip 平台不匹配：这个测试文件很可能在收集阶段就被判定为不适用于 NPU 平台，于是 pytest 直接将其标记为 SKIPPED
+tests/kernels/attention/test_kimi_k3_mla_fused_epilogue.py          # skip 平台不匹配：1)测试名里包含 mla_fused_epilogue（MLA 融合的尾声操作）和 fused_epilogue（融合尾声操作）。这些是高度硬件相关的算子融合技术。 2)在 Ascend NPU 上，这些融合算子的实现方式与 GPU 完全不同，测试代码内部的 @pytest.mark.skipif 条件判定当前环境不适用，于是全部跳过。
+tests/kernels/attention/test_kimi_k3_mla_key_concat_kv_cache.py     # skip 平台不匹配  test_rocm_*：这个测试是专门为 AMD ROCm 平台编写的 在 Ascend NPU 上，ROCm 相关的算子和后端根本不存在，测试代码内部的 @pytest.mark.skipif 条件判定当前平台不适用，于是全部跳过。
 tests/kernels/attention/test_minimax_m3_msa_cutlass_sparse_decode.py
 tests/kernels/attention/test_rocm_aiter_fa.py
 tests/kernels/attention/test_rocm_aiter_mla_causal_verify_mask.py
 tests/kernels/attention/test_rocm_aiter_mla_decode.py
-tests/kernels/attention/test_rocm_aiter_mla_fp8_prefill.py
-tests/kernels/attention/test_rocm_aiter_mla_fp8_support.py
+tests/kernels/attention/test_rocm_aiter_mla_fp8_prefill.py          # skip 以上均 平台不支持
+tests/kernels/attention/test_rocm_aiter_mla_fp8_support.py          #  skip 平台不匹配   after_mla_fp8_support：测试的是 MLA（Multi-Head Latent Attention）之后 FP8 量化的支持情况，这是 GPU 专属的算子。
 tests/kernels/attention/test_rocm_aiter_mla_head_padding.py
 tests/kernels/attention/test_rocm_aiter_mla_op_registration.py     # skip 以上均 平台不支持
 tests/kernels/core/test_fused_embed_norm.py
 tests/kernels/core/test_rocm_aiter_ops.py
-tests/kernels/core/test_vocab_parallel_embedding.py                # skip 以上均 平台不支持
+tests/kernels/core/test_vocab_parallel_embedding.py                # skip 以上均 平台不支持  这些测试很可能依赖特定的 GPU 内核（如 CUDA 或 ROCm 的 masked_gather 实现）
 tests/kernels/helion/test_benchmark_script.py
 tests/kernels/mamba/test_gdn_fused_mtp.py
-tests/kernels/mamba/test_memcpy_u64_tiled.py
-tests/kernels/mamba/test_replayssm_prefill_decode_equivalence_mamba2.py
+tests/kernels/mamba/test_memcpy_u64_tiled.py                      # skip 平台不支持  这个测试依赖特定的 Triton 内核（memcpy_u64_tiled），这是为 GPU（特别是 NVIDIA）优化的内存拷贝实现
+tests/kernels/mamba/test_replayssm_prefill_decode_equivalence_mamba2.py # skip 以上均 平台不支持  这类测试依赖特定的 Mamba2 SSM 内核，这些内核在 GPU 上通常由 CUDA 或特定的 Triton 实现提供。  在 Ascend NPU 上，Mamba2 的 SSM 实现方式与 GPU 不同（你日志里也一直在警告 NPU Triton causal_conv1d update is unavailable），测试代码内部的 @pytest.mark.skipif 条件判定当前环境不适用，于是全部跳过。
 tests/kernels/mamba/test_replayssm_standard_decode_mamba2.py      # skip 以上均 平台不支持
-tests/kernels/moe/test_b12x.py                                    # 平台不支持   NotImplementedError: is_act_and_mul=False is supported only for CUDA, XPU and ROCm for now
+tests/kernels/moe/test_b12x.py                                    # failed 平台不支持   NotImplementedError: is_act_and_mul=False is supported only for CUDA, XPU and ROCm for now
 tests/kernels/moe/test_flashinfer_cutedsl_nvfp4_moe.py
 tests/kernels/moe/test_moe_fused_mul_sum.py                       # skip 以上均 平台不支持
-tests/kernels/moe/test_rocm_aiter_moe.py                          #平台不支持 AssertionError: Torch not compiled with CUDA enabled
+tests/kernels/moe/test_rocm_aiter_moe.py                          #failed 平台不支持 AssertionError: Torch not compiled with CUDA enabled
 tests/kernels/moe/test_routed_experts_capture_monolithic.py
 tests/kernels/moe/test_situ_mul_fp8_quant.py
 tests/kernels/moe/test_zen_cpu_fused_moe.py
@@ -69,7 +69,7 @@ tests/kernels/test_flashinfer_bf16_gemm.py
 tests/kernels/test_kimi_k3_gemm_rs_ar.py
 tests/kernels/test_mhc_tilelang_jit.py                             # skip 以上均 平台不支持
 tests/kernels/turboquant/test_flydsl_turboquant_decode.py          # skip 以上均 平台不支持
-tests/lora/test_gemma4_tp.py                                       #--------- 多机 tp2 tp4
+tests/lora/test_gemma4_tp.py                                       #-----显存不够--ValueError: Free memory on device
 tests/model_executor/layers/test_fused_shared_expert.py            # E   ValueError: Failed to find a kernel that can implement the MXFP4 linear layer.  缺少 NPU 对应的 MXFP4 量化算子实现
 tests/model_executor/test_sleep_mode_tensor_ownership.py           # skip 以上均 平台不支持
 tests/models/inkling/rocm/test_model_alignment.py                  # AssertionError: Torch not compiled with CUDA enabled
@@ -85,7 +85,7 @@ tests/models/kimi_k3/test_kda.py
 tests/models/kimi_k3/test_kda_metadata.py
 tests/models/kimi_k3/test_latent_moe_tail.py
 tests/models/kimi_k3/test_mla_prefill_context.py                # skip 以上均 平台不支持
-tests/models/kimi_k3/test_sequence_parallel.py                  # 多机，但也不支持 平台不支持
+tests/models/kimi_k3/test_sequence_parallel.py                  # --------，显存不够
 tests/models/language/generation/test_gdn_sleep_wake.py         # ---多机待确定-----ValueError: Free memory on device (0.73/29.49 GiB)
 tests/models/language/pooling_mteb_test/test_modernbert_fp8.py  # 重跑  pip install mteb
 tests/models/multimodal/generation/test_gemma_ragged_audio.py    # ---多机-----ValueError: Free
