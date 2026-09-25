@@ -1,36 +1,36 @@
 tests/compile/passes/test_rmsnorm_reshape_fusion.py              # skip 平台不匹配，CUDA图，test_msnorm_reshape_fusion.py（测试 msnorm 算子融合
 tests/compile/test_deepstack_input_contract.py                   #Torch not compiled with CUDA enabled
-tests/distributed/test_custom_all_gather_reduce_scatter.py
-tests/distributed/test_dcp_direct_a2a_lse_reduce.py
-tests/distributed/test_eplb_quant_scale_consistency.py
-tests/distributed/test_file_store.py
-tests/distributed/test_kimi_linear_context_parallel.py
-tests/distributed/test_sharded_rdt_plan.py
-tests/distributed/test_sharded_rdt_producer.py
-tests/distributed/test_sharded_rdt_trainer.py
-tests/entrypoints/cohere/test_api_router.py
-tests/entrypoints/cohere/test_chat_v2.py
-tests/entrypoints/cohere/test_protocol.py
-tests/entrypoints/cohere/test_serving_conversion.py
-tests/entrypoints/cohere/test_serving_streaming.py
-tests/entrypoints/launchers/api_server/test_api_server_process_manager.py
-tests/entrypoints/launchers/api_server/test_multi_api_servers.py
-tests/entrypoints/launchers/test_dp_supervisor.py
-tests/entrypoints/launchers/test_run_batch.py
-tests/entrypoints/launchers/test_shutdown.py
-tests/entrypoints/launchers/test_ssl_cert_refresher.py
-tests/entrypoints/openai/test_render_parity.py
-tests/entrypoints/openai/test_sse_keep_alive.py
-tests/entrypoints/scale_out/derender/test_derender_stream.py
-tests/entrypoints/serve/dev/rlhf/state_transitions/test_pause_resume.py
-tests/entrypoints/serve/exception_handling/test_http_status_metrics.py
-tests/entrypoints/serve/exception_handling/test_validation_exception_handler.py
-tests/entrypoints/serve/instrumentator/test_uds.py
-tests/entrypoints/serve/middleware/test_optional_middleware.py
-tests/entrypoints/speech_to_text/transcription/test_chunk_timestamp_offset.py
-tests/evals/qwen4_exp/test_accuracy.py
-tests/jit_monitor/test_hooks_gpu.py
-tests/jit_monitor/test_no_runtime_jit.py
+tests/distributed/test_custom_all_gather_reduce_scatter.py       # skip 平台不支持NPU Triton causal_conv1d update is unavailable
+tests/distributed/test_dcp_direct_a2a_lse_reduce.py              # 同上
+tests/distributed/test_eplb_quant_scale_consistency.py           # 同上
+tests/distributed/test_file_store.py                             #------AssertionError: Current vLLM config is not set. This typically means get_current_vllm_config() was called outside of a set_current_vllm_config() context, or a CustomOp was instantiated at module import time or model forward time when config is not set. For tests that directly test custom ops/modules, use the 'default_vllm_config' pytest fixture from tests/conftest.py.
+tests/distributed/test_kimi_linear_context_parallel.py           #重跑 -----dp 2机 待重跑
+tests/distributed/test_sharded_rdt_plan.py                       # skip 平台不支持
+tests/distributed/test_sharded_rdt_producer.py                   # ------ray 库不支持， ValueError: Invalid tensor transport NIXL, must be one of ['OBJECT_STORE', 'NCCL', 'GLOO'].
+tests/distributed/test_sharded_rdt_trainer.py                    # ray库不支持，同上
+tests/entrypoints/cohere/test_api_router.py                      #重跑------pass
+tests/entrypoints/cohere/test_chat_v2.py                         #重跑------HuggingFaceTB/SmolLM2-135M-Instruct 不是一个有效的 HuggingFace 仓库 ID 或本地目录
+tests/entrypoints/cohere/test_protocol.py                        #重跑----pass
+tests/entrypoints/cohere/test_serving_conversion.py              #重跑----pass
+tests/entrypoints/cohere/test_serving_streaming.py               #重跑----pass
+tests/entrypoints/launchers/api_server/test_api_server_process_manager.py  # 重跑-----判断rust，rust不存在 待安装后重跑  RuntimeError: Timed out after 15.0s waiting for API server(s) to report bound ZMQ addresses: ['ApiServer_0', 'ApiServer_1', 'ApiServer_2', 'ApiServer_3']
+tests/entrypoints/launchers/api_server/test_multi_api_servers.py  # 重跑-------httpx.ConnectError: [Errno 101] Network is unreachable
+tests/entrypoints/launchers/test_dp_supervisor.py                 #重跑----pass
+tests/entrypoints/launchers/test_run_batch.py                     #重跑----多机---dp 2机
+tests/entrypoints/launchers/test_shutdown.py                      #重跑 ------- httpx.ConnectError: [Errno 101] Network is unreachable
+tests/entrypoints/launchers/test_ssl_cert_refresher.py            # #重跑 ------- 同上
+tests/entrypoints/openai/test_render_parity.py                    # 重跑 --------同上
+tests/entrypoints/openai/test_sse_keep_alive.py                    # 重跑 ----------同上
+tests/entrypoints/scale_out/derender/test_derender_stream.py       # 重跑 ----------同上
+tests/entrypoints/serve/dev/rlhf/state_transitions/test_pause_resume.py # 重跑 ---huggingface RuntimeError: Task error: File reconstruction error: CAS Client Error: Request error: HTTP status client error (401 Unauthorized), domain: https://cas-server
+tests/entrypoints/serve/exception_handling/test_http_status_metrics.py  # 重跑 ---pip uninstall triton triton-ascend -y pip install triton-ascend  python -c "import torch; import torch_npu; print('SUCCESS')"  -----RuntimeError: Failed to load the backend extension: torch_npu  source /usr/local/Ascend/ascend-toolkit/set_env.sh  export LD_LIBRARY_PATH=/usr/local/Ascend/ascend-toolkit/latest/lib64:$LD_LIBRARY_PATH
+tests/entrypoints/serve/exception_handling/test_validation_exception_handler.py   # 重跑 ---同上
+tests/entrypoints/serve/instrumentator/test_uds.py                  # 重跑  ----同上
+tests/entrypoints/serve/middleware/test_optional_middleware.py      # 重跑 ----同上
+tests/entrypoints/speech_to_text/transcription/test_chunk_timestamp_offset.py  # 重跑----同上
+tests/evals/qwen4_exp/test_accuracy.py                             # 重跑----同上
+tests/jit_monitor/test_hooks_gpu.py                                  # skip 平台不支持
+tests/jit_monitor/test_no_runtime_jit.py                             # skip 平台不支持
 tests/kernels/attention/test_amx_mla.py
 tests/kernels/attention/test_kimi_k3_mla_fused_epilogue.py
 tests/kernels/attention/test_kimi_k3_mla_key_concat_kv_cache.py
@@ -41,38 +41,38 @@ tests/kernels/attention/test_rocm_aiter_mla_decode.py
 tests/kernels/attention/test_rocm_aiter_mla_fp8_prefill.py
 tests/kernels/attention/test_rocm_aiter_mla_fp8_support.py
 tests/kernels/attention/test_rocm_aiter_mla_head_padding.py
-tests/kernels/attention/test_rocm_aiter_mla_op_registration.py
+tests/kernels/attention/test_rocm_aiter_mla_op_registration.py     # skip 以上均 平台不支持
 tests/kernels/core/test_fused_embed_norm.py
 tests/kernels/core/test_rocm_aiter_ops.py
-tests/kernels/core/test_vocab_parallel_embedding.py
+tests/kernels/core/test_vocab_parallel_embedding.py                # skip 以上均 平台不支持
 tests/kernels/helion/test_benchmark_script.py
 tests/kernels/mamba/test_gdn_fused_mtp.py
 tests/kernels/mamba/test_memcpy_u64_tiled.py
 tests/kernels/mamba/test_replayssm_prefill_decode_equivalence_mamba2.py
-tests/kernels/mamba/test_replayssm_standard_decode_mamba2.py
-tests/kernels/moe/test_b12x.py
+tests/kernels/mamba/test_replayssm_standard_decode_mamba2.py      # skip 以上均 平台不支持
+tests/kernels/moe/test_b12x.py                                    # 平台不支持   NotImplementedError: is_act_and_mul=False is supported only for CUDA, XPU and ROCm for now
 tests/kernels/moe/test_flashinfer_cutedsl_nvfp4_moe.py
-tests/kernels/moe/test_moe_fused_mul_sum.py
-tests/kernels/moe/test_rocm_aiter_moe.py
+tests/kernels/moe/test_moe_fused_mul_sum.py                       # skip 以上均 平台不支持
+tests/kernels/moe/test_rocm_aiter_moe.py                          #平台不支持 AssertionError: Torch not compiled with CUDA enabled
 tests/kernels/moe/test_routed_experts_capture_monolithic.py
 tests/kernels/moe/test_situ_mul_fp8_quant.py
 tests/kernels/moe/test_zen_cpu_fused_moe.py
-tests/kernels/moe/test_zen_cpu_int8_moe.py
+tests/kernels/moe/test_zen_cpu_int8_moe.py                         # skip 以上均 平台不支持
 tests/kernels/quantization/test_aiter_hipb_mm_linear_kernel.py
 tests/kernels/quantization/test_flashinfer_mxfp8_trtllm.py
 tests/kernels/quantization/test_quant_op_schema.py
 tests/kernels/quantization/test_rocm_aiter_grouped_quant.py
 tests/kernels/quantization/test_rocm_fp8.py
-tests/kernels/quantization/test_rocm_mxfp4.py
+tests/kernels/quantization/test_rocm_mxfp4.py                     # skip 以上均 平台不支持
 tests/kernels/test_bf16_skinny_gemm.py
 tests/kernels/test_flashinfer_bf16_gemm.py
 tests/kernels/test_kimi_k3_gemm_rs_ar.py
-tests/kernels/test_mhc_tilelang_jit.py
-tests/kernels/turboquant/test_flydsl_turboquant_decode.py
-tests/lora/test_gemma4_tp.py
-tests/model_executor/layers/test_fused_shared_expert.py
-tests/model_executor/test_sleep_mode_tensor_ownership.py
-tests/models/inkling/rocm/test_model_alignment.py
+tests/kernels/test_mhc_tilelang_jit.py                             # skip 以上均 平台不支持
+tests/kernels/turboquant/test_flydsl_turboquant_decode.py          # skip 以上均 平台不支持
+tests/lora/test_gemma4_tp.py                                       #--------- 多机 tp2 tp4
+tests/model_executor/layers/test_fused_shared_expert.py            # E   ValueError: Failed to find a kernel that can implement the MXFP4 linear layer.  缺少 NPU 对应的 MXFP4 量化算子实现
+tests/model_executor/test_sleep_mode_tensor_ownership.py           # skip 以上均 平台不支持
+tests/models/inkling/rocm/test_model_alignment.py                  # AssertionError: Torch not compiled with CUDA enabled
 tests/models/inkling/rocm/test_mxfp4_load.py
 tests/models/inkling/rocm/test_rel_attention.py
 tests/models/inkling/rocm/test_rocm_mtp_input_fusion.py
@@ -84,69 +84,69 @@ tests/models/kimi_k3/test_attn_res.py
 tests/models/kimi_k3/test_kda.py
 tests/models/kimi_k3/test_kda_metadata.py
 tests/models/kimi_k3/test_latent_moe_tail.py
-tests/models/kimi_k3/test_mla_prefill_context.py
-tests/models/kimi_k3/test_sequence_parallel.py
-tests/models/language/generation/test_gdn_sleep_wake.py
-tests/models/language/pooling_mteb_test/test_modernbert_fp8.py
-tests/models/multimodal/generation/test_gemma_ragged_audio.py
-tests/models/multimodal/generation/test_moondream3_moe.py
-tests/models/multimodal/generation/test_transformers_audio.py
-tests/models/multimodal/generation_ppl_test/test_qwen.py
-tests/models/multimodal/processing/test_transformers_audio.py
-tests/models/multimodal/processing/test_transformers_image.py
-tests/models/multimodal/test_mimo_v2_omni.py
+tests/models/kimi_k3/test_mla_prefill_context.py                # skip 以上均 平台不支持
+tests/models/kimi_k3/test_sequence_parallel.py                  # 多机，但也不支持 平台不支持
+tests/models/language/generation/test_gdn_sleep_wake.py         # ---多机待确定-----ValueError: Free memory on device (0.73/29.49 GiB)
+tests/models/language/pooling_mteb_test/test_modernbert_fp8.py  # 重跑  pip install mteb
+tests/models/multimodal/generation/test_gemma_ragged_audio.py    # ---多机-----ValueError: Free
+tests/models/multimodal/generation/test_moondream3_moe.py         # ---多机-----ValueError: Free
+tests/models/multimodal/generation/test_transformers_audio.py     # ---多机-----ValueError: Free
+tests/models/multimodal/generation_ppl_test/test_qwen.py          #重跑----RuntimeError: Failed to load the backend extension: torch_npu. You can disable extension auto-loading with TORCH_DEVICE_BACKEND_AUTOLOAD=0
+tests/models/multimodal/processing/test_transformers_audio.py     # 重跑 看完整报错
+tests/models/multimodal/processing/test_transformers_image.py     # 重跑  RuntimeError: Failed to load the backend extension: torch_npu. You can disable extension auto-loading with TORCH_DEVICE_BACKEND_AUTOLOAD=0.
+tests/models/multimodal/test_mimo_v2_omni.py                      # skip 平台不支持
 tests/models/qwen4_exp/test_hc_ops.py
 tests/models/qwen4_exp/test_qsa_amd.py
 tests/models/qwen4_exp/test_qsa_pre_indexer.py
-tests/models/qwen4_exp/test_qsa_reference.py
-tests/models/test_deepseek_v4_rocm_compressor_gemm_fusion.py
-tests/models/transformers/test_layer_registry.py
-tests/platforms/test_cpu.py
-tests/plugins_tests/bitsandbytes/test_bitsandbytes.py
-tests/plugins_tests/bitsandbytes/test_transformers.py
+tests/models/qwen4_exp/test_qsa_reference.py                      #  skip 以上均 平台不支持
+tests/models/test_deepseek_v4_rocm_compressor_gemm_fusion.py      # 平台不支持  AssertionError: Torch not compiled with CUDA enabled
+tests/models/transformers/test_layer_registry.py                  # ---多机-----ValueError: Free
+tests/platforms/test_cpu.py                                       # cpu 不支持 assert vllm_config.device_config.device_type == "cpu"
+tests/plugins_tests/bitsandbytes/test_bitsandbytes.py             # 重跑  pip install vllm_bnb_plugin     ModuleNotFoundError: No module named 'vllm_bnb_plugin'
+tests/plugins_tests/bitsandbytes/test_transformers.py             # 重跑  pip install vllm_bnb_plugin
 tests/quantization/test_humming_mxfp4_block_fp8.py
 tests/quantization/test_int8_moe_oracle.py
-tests/quantization/test_online_mxfp4.py
-tests/renderers/test_cohere.py
-tests/renderers/test_kimi_k3.py
-tests/test_audio_media_size_precheck.py
-tests/test_connections.py
-tests/tool_parsers/test_cohere_command_tool_parser.py
+tests/quantization/test_online_mxfp4.py                           #  skip 以上均 平台不支持
+tests/renderers/test_cohere.py                                    # 重跑 ---- RuntimeError: Failed to load the backend extension: torch_npu. You can disable extension auto-loading with TORCH_DEVICE_BACKEND_AUTOLOAD=0
+tests/renderers/test_kimi_k3.py                                   # 重跑 ----同上
+tests/test_audio_media_size_precheck.py                           # 重跑
+tests/test_connections.py                                         # 重跑 ----
+tests/tool_parsers/test_cohere_command_tool_parser.py             # 重跑  ----------
 tests/tool_use/test_kimi_k3_tool_parser.py
 tests/tool_use/test_muse_glimmer.py
-tests/tool_use/test_muse_glimmer_parse_delta.py
-tests/v1/attention/test_cpu_mla_backend.py
+tests/tool_use/test_muse_glimmer_parse_delta.py                   # 重跑 -以上均--------RuntimeError: Failed to load the backend extension: torch_npu. You can disable extension auto-loading with TORCH_DEVICE_BACKEND_AUTOLOAD=0
+tests/v1/attention/test_cpu_mla_backend.py                        #  skip  平台不支持
 tests/v1/attention/test_cuda_backend_probe_errors.py
 tests/v1/attention/test_flashinfer_mla_dcp.py
 tests/v1/attention/test_group_head_counts.py
 tests/v1/attention/test_mm_prefix.py
 tests/v1/attention/test_rocm_aiter_mla_fp8_decode_routing.py
 tests/v1/attention/test_rocm_aiter_mla_mtp_split.py
-tests/v1/attention/test_sparse_mla_mask.py
-tests/v1/core/test_mamba_align_chunk_split.py
-tests/v1/cudagraph/test_cudagraph_manager.py
-tests/v1/determinism/test_batch_invariance_vlm.py
-tests/v1/distributed/test_dense_dp_world_size.py
-tests/v1/e2e/general/test_sharded_sampling.py
-tests/v1/e2e/spec_decode/acceptance_rates/dflash/test_dflash.py
-tests/v1/e2e/spec_decode/acceptance_rates/dspark/test_dspark.py
-tests/v1/e2e/spec_decode/acceptance_rates/mtp_other/test_medusa.py
-tests/v1/e2e/spec_decode/acceptance_rates/mtp_other/test_mtp.py
-tests/v1/e2e/spec_decode/acceptance_rates/mtp_other/test_synthetic.py
-tests/v1/e2e/spec_decode/draft_model/test_async.py
-tests/v1/e2e/spec_decode/draft_model/test_draft_model.py
-tests/v1/e2e/spec_decode/draft_model/test_lora.py
-tests/v1/e2e/spec_decode/eagle/test_eagle_correctness.py
-tests/v1/e2e/spec_decode/mtp/test_mtp.py
+tests/v1/attention/test_sparse_mla_mask.py                        #  skip 以上均 平台不支持
+tests/v1/core/test_mamba_align_chunk_split.py                     # *****  vllm-ascend 插件在 Mamba 补丁中直接访问 self.vllm_config，但测试代码中的 self 是 SimpleNamespace，没有这个属性     兼容性问题      AttributeError: 'types.SimpleNamespace' object has no attribute 'vllm_config'
+tests/v1/cudagraph/test_cudagraph_manager.py                      #*******  vllm-ascend 插件的兼容性 Bug    AttributeError: 'InputBuffers' object has no attribute 'seq_lens_np'. Did you mean: 'seq_lens'?
+tests/v1/determinism/test_batch_invariance_vlm.py                 #  skip  平台不支持
+tests/v1/distributed/test_dense_dp_world_size.py                  # 重跑 huggingface ----RuntimeError: Task error: File reconstruction error: CAS Client Error: Request error: HTTP status client error (401 Unauthorized)
+tests/v1/e2e/general/test_sharded_sampling.py                     # 重跑 huggingface  Client error '403 Forbidden' for url 'https://hf-mirror.com/meta-llama/Llama-3.2-1B-In
+tests/v1/e2e/spec_decode/acceptance_rates/dflash/test_dflash.py   # 重跑 多机
+tests/v1/e2e/spec_decode/acceptance_rates/dspark/test_dspark.py   # 重跑 多机
+tests/v1/e2e/spec_decode/acceptance_rates/mtp_other/test_medusa.py  # 重跑 多机
+tests/v1/e2e/spec_decode/acceptance_rates/mtp_other/test_mtp.py     # 重跑 多机
+tests/v1/e2e/spec_decode/acceptance_rates/mtp_other/test_synthetic.py  #  skip  平台不支持
+tests/v1/e2e/spec_decode/draft_model/test_async.py                       # 重跑 多机
+tests/v1/e2e/spec_decode/draft_model/test_draft_model.py              # 重跑 多机
+tests/v1/e2e/spec_decode/draft_model/test_lora.py                      #  skip  平台不支持
+tests/v1/e2e/spec_decode/eagle/test_eagle_correctness.py                # 不支持 vLLM 主仓的这个工具函数只为 CUDA 和 ROCm 平台提供了分支，没有为 Ascend NPU 编写对应逻辑  vllm/tests/utils.py:2216，函数 get_attn_backend_list_based_on_platform() 内部抛出了 ValueError("Unsupported platform")
+tests/v1/e2e/spec_decode/mtp/test_mtp.py                                #  skip  平台不支持
 tests/v1/e2e/spec_decode/ngram_suffix/test_ngram_suffix.py
-tests/v1/e2e/spec_decode/speculators/test_speculators.py
-tests/v1/e2e/spec_decode/test_mtp_parallel_load.py
-tests/v1/e2e/spec_decode/test_sharded_sampling.py
-tests/v1/e2e/test_replayssm_decode.py
-tests/v1/engine/test_admission_control.py
-tests/v1/engine/test_startup_watch_processes.py
-tests/v1/fault_tolerance/test_fault_tolerance_e2e.py
-tests/v1/kv_connector/mooncake_integration/test_accuracy.py
+tests/v1/e2e/spec_decode/speculators/test_speculators.py               #  skip 以上均 平台不支持
+tests/v1/e2e/spec_decode/test_mtp_parallel_load.py                       # 重跑 多机
+tests/v1/e2e/spec_decode/test_sharded_sampling.py                       # 重跑 多机
+tests/v1/e2e/test_replayssm_decode.py                                  # 重跑 多机
+tests/v1/engine/test_admission_control.py                            # 重跑 --------
+tests/v1/engine/test_startup_watch_processes.py                          # ******  重跑 多机  vllm-ascend 插件的兼容性 Bug  vllm-ascend 插件在 init_ascend_config() 中直接访问 vllm_config.additional_config，但测试代码传入的 SimpleNamespace 没有这个属性。
+tests/v1/fault_tolerance/test_fault_tolerance_e2e.py                  #  skip  平台不支持
+tests/v1/kv_connector/mooncake_integration/test_accuracy.py           # 重跑 -----pip install lm-eval
 tests/v1/kv_connector/unit/test_nixl_rocm_gpu_mem_diag.py
 tests/v1/kv_offload/cpu/test_canonical_layout.py
 tests/v1/spec_decode/test_dflash_prepare_inputs.py
@@ -161,4 +161,4 @@ tests/v1/worker/test_gpu_trace_replay.py
 tests/v1/worker/test_gpu_warmup_blocks.py
 tests/v1/worker/test_jit_warmup_migration.py
 tests/v1/worker/test_mamba_hybrid_model_state.py
-tests/v1/worker/test_prompt_embeds_state.py
+tests/v1/worker/test_prompt_embeds_state.py                          #  skip 以上均 平台不支持
