@@ -136,3 +136,12 @@ tests/v1/distributed/test_dense_dp_world_size.py
 tests/v1/e2e/spec_decode/acceptance_rates/mtp_other/test_medusa.py
 tests/v1/e2e/test_replayssm_decode.py
 tests/v1/engine/test_admission_control.py
+tests/distributed/test_kimi_linear_context_parallel.py
+tests/entrypoints/launchers/test_run_batch.py
+tests/lora/test_gemma4_tp.py
+tests/v1/e2e/spec_decode/acceptance_rates/dflash/test_dflash.py
+tests/v1/e2e/spec_decode/acceptance_rates/dspark/test_dspark.py
+tests/v1/e2e/spec_decode/acceptance_rates/mtp_other/test_mtp.py
+tests/v1/e2e/spec_decode/draft_model/test_async.py
+tests/v1/e2e/spec_decode/test_mtp_parallel_load.py
+tests/v1/e2e/spec_decode/test_sharded_sampling.py

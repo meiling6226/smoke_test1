@@ -1,36 +1,18 @@
 tests/compile/passes/test_rmsnorm_reshape_fusion.py              # skip RMSNorm 的 reshape 融合算子不支持  ::test_rmsnorm_reshape_fusion SKIPPED
 tests/compile/test_deepstack_input_contract.py                   # AssertionError: Torch not compiled with CUDA enabled
 tests/distributed/test_custom_all_gather_reduce_scatter.py       # skip ::test_mnnvl_lamport_stage_cleanup SKIPPED  在 Ascend NPU 上，GPU 之间的互联使用的是 HCCS 而非 NVLink。因此，针对 NVLink 特定通信逻辑（如 Lamport 算法的某个阶段清理）的测试，在 NPU 上无法运行。
-tests/distributed/test_dcp_direct_a2a_lse_reduce.py              # 重跑----  pip install multiprocess  ModuleNotFoundError: No module named 'multiprocess'
+tests/distributed/test_dcp_direct_a2a_lse_reduce.py              # skip 平台不匹配  RuntimeError: Distributed package doesn't have NCCL built in   这个测试文件（test_dcp_direct_a2a_lse_reduce.py）是为 NVIDIA GPU 编写的，在初始化分布式环境时直接指定了 backend="nccl"，没有做平台判断。
 tests/distributed/test_eplb_quant_scale_consistency.py           # skip::test_nvfp4_eplb_rearrangement_matches_reload[flashinfer_cutedsl]   flashinfer 是一个专门为 NVIDIA GPU 优化的推理加速库，cutedsl 和 trtllm 都是它的特定后端。
 tests/distributed/test_file_store.py                             # ****兼容性 Bug：vllm-ascend 的 calculate_dp_buffer_size() 对 vllm_config 的存在性做了过强的假设，导致在没有完整模型配置的测试场景下直接崩溃。 ------AssertionError: Current vLLM config is not set. This typically means get_current_vllm_config() was called outside of a set_current_vllm_config() context, or a CustomOp was instantiated at module import time or model forward time when config is not set. For tests that directly test custom ops/modules, use the 'default_vllm_config' pytest fixture from tests/conftest.py.
-tests/distributed/test_kimi_linear_context_parallel.py           #重跑 --- ValueError: Free memory on device -- DP group leader: node_rank=0, node_rank_within_dp=0, master_addr=127.0.0.1, mq_connect_ip=173.125.1.2 (local), world_size=2, local_world_size=2
-tests/distributed/test_sharded_rdt_plan.py                       # 重跑----TestBakeOnARealModel 类，参数化里指定了具体的模型架构：qga-dense、moe、mla-moe。---缺少真实模型
-tests/distributed/test_sharded_rdt_producer.py                   # ------ Ray 库不识别 "nixl" 这个张量传输后端， ValueError: Invalid tensor transport NIXL, must be one of ['OBJECT_STORE', 'NCCL', 'GLOO'].
+tests/distributed/test_kimi_linear_context_parallel.py           #  ++++  CI 重跑  可能npu资源不足
+tests/distributed/test_sharded_rdt_plan.py                       # TestBakeOnARealModel 类，参数化里指定了具体的模型架构：qga-dense、moe、mla-moe。---缺少真实模型
+tests/distributed/test_sharded_rdt_producer.py                   # Ray 库不识别 "nixl" 这个张量传输后端， ValueError: Invalid tensor transport NIXL, must be one of ['OBJECT_STORE', 'NCCL', 'GLOO'].
 tests/distributed/test_sharded_rdt_trainer.py                    # ray库不支持，同上
-tests/entrypoints/cohere/test_api_router.py                      #重跑------pass
-tests/entrypoints/cohere/test_chat_v2.py                         #重跑------HuggingFaceTB/SmolLM2-135M-Instruct 不是一个有效的 HuggingFace 仓库 ID 或本地目录
-tests/entrypoints/cohere/test_protocol.py                        #重跑----pass
-tests/entrypoints/cohere/test_serving_conversion.py              #重跑----pass
-tests/entrypoints/cohere/test_serving_streaming.py               #重跑----pass
-tests/entrypoints/launchers/api_server/test_api_server_process_manager.py  # 重跑-----判断rust，rust不存在 待安装后重跑  RuntimeError: Timed out after 15.0s waiting for API server(s) to report bound ZMQ addresses: ['ApiServer_0', 'ApiServer_1', 'ApiServer_2', 'ApiServer_3']
-tests/entrypoints/launchers/api_server/test_multi_api_servers.py  # 重跑-------httpx.ConnectError: [Errno 101] Network is unreachable
-tests/entrypoints/launchers/test_dp_supervisor.py                 #重跑----pass
-tests/entrypoints/launchers/test_run_batch.py                     #重跑----多机---dp 2机
-tests/entrypoints/launchers/test_shutdown.py                      #重跑 ------- httpx.ConnectError: [Errno 101] Network is unreachable
-tests/entrypoints/launchers/test_ssl_cert_refresher.py            # #重跑 ------- 同上
-tests/entrypoints/openai/test_render_parity.py                    # 重跑 --------同上
-tests/entrypoints/openai/test_sse_keep_alive.py                    # 重跑 ----------同上
-tests/entrypoints/scale_out/derender/test_derender_stream.py       # 重跑 ----------同上
-tests/entrypoints/serve/dev/rlhf/state_transitions/test_pause_resume.py # 重跑 ---huggingface RuntimeError: Task error: File reconstruction error: CAS Client Error: Request error: HTTP status client error (401 Unauthorized), domain: https://cas-server
-tests/entrypoints/serve/exception_handling/test_http_status_metrics.py  # 重跑 ---pip uninstall triton triton-ascend -y pip install triton-ascend  python -c "import torch; import torch_npu; print('SUCCESS')"  -----RuntimeError: Failed to load the backend extension: torch_npu  source /usr/local/Ascend/ascend-toolkit/set_env.sh  export LD_LIBRARY_PATH=/usr/local/Ascend/ascend-toolkit/latest/lib64:$LD_LIBRARY_PATH
-tests/entrypoints/serve/exception_handling/test_validation_exception_handler.py   # 重跑 ---同上
-tests/entrypoints/serve/instrumentator/test_uds.py                  # 重跑  ----同上
-tests/entrypoints/serve/middleware/test_optional_middleware.py      # 重跑 ----同上
-tests/entrypoints/speech_to_text/transcription/test_chunk_timestamp_offset.py  # 重跑----同上
-tests/evals/qwen4_exp/test_accuracy.py                             # 重跑----同上
+tests/entrypoints/launchers/api_server/test_api_server_process_manager.py  #  ZMQ 的地址绑定和管道通信在 NPU 环境下可能受到网络配置或权限限制的影响。  RuntimeError: Timed out after 15.0s waiting for API server(s) to report bound ZMQ addresses: ['ApiServer_0', 'ApiServer_1', 'ApiServer_2', 'ApiServer_3']
+tests/entrypoints/launchers/test_run_batch.py                     # ++++  CI 重跑   ValueError: No common block size for 16
+tests/evals/qwen4_exp/test_accuracy.py                             # ERROR: usage: pytest [options] [file_or_dir] [file_or_dir] [...] pytest: error: the following arguments are required: --config-list-file
 tests/jit_monitor/test_hooks_gpu.py                                  # skip 在 Ascend NPU 上，JIT 编译的机制和 GPU 完全不同，测试代码内部的 @pytest.mark.skipif 条件判定当前平台不适用，于是直接跳过。
-tests/jit_monitor/test_no_runtime_jit.py                             # skip 重跑------这些测试需要加载真实的模型权重，而测试代码内部的 @pytest.mark.skipif 条件判定当前环境没有这些模型，于是直接跳过。
+tests/jit_monitor/test_no_runtime_jit.py                             # skip 这些测试需要加载真实的模型权重，而测试代码内部的 @pytest.mark.skipif 条件判定当前环境没有这些模型，于是直接跳过。
 tests/kernels/attention/test_amx_mla.py                              # skip 平台不匹配：这个测试文件很可能在收集阶段就被判定为不适用于 NPU 平台，于是 pytest 直接将其标记为 SKIPPED
 tests/kernels/attention/test_kimi_k3_mla_fused_epilogue.py          # skip 平台不匹配：1)测试名里包含 mla_fused_epilogue（MLA 融合的尾声操作）和 fused_epilogue（融合尾声操作）。这些是高度硬件相关的算子融合技术。 2)在 Ascend NPU 上，这些融合算子的实现方式与 GPU 完全不同，测试代码内部的 @pytest.mark.skipif 条件判定当前环境不适用，于是全部跳过。
 tests/kernels/attention/test_kimi_k3_mla_key_concat_kv_cache.py     # skip 平台不匹配  test_rocm_*：这个测试是专门为 AMD ROCm 平台编写的 在 Ascend NPU 上，ROCm 相关的算子和后端根本不存在，测试代码内部的 @pytest.mark.skipif 条件判定当前平台不适用，于是全部跳过。
@@ -69,7 +51,7 @@ tests/kernels/test_flashinfer_bf16_gemm.py
 tests/kernels/test_kimi_k3_gemm_rs_ar.py
 tests/kernels/test_mhc_tilelang_jit.py                             # skip 以上均 平台不支持
 tests/kernels/turboquant/test_flydsl_turboquant_decode.py          # skip 以上均 平台不支持
-tests/lora/test_gemma4_tp.py                                       #-----显存不够--ValueError: Free memory on device
+tests/lora/test_gemma4_tp.py                                       #   ++++ CI 重跑-- 可能npu资源不足  Worker 进程在初始化阶段崩溃了，导致 EngineCore 启动失败   Exception: WorkerProc initialization failed due to an exception in a background process. See stack trace for root cause. E   RuntimeError: Process EngineCore: Traceback (most recent call last): File "/usr/local/python3.12.13/lib/python3.12/multiprocessing/process.py", line 314, in _bootstrap
 tests/model_executor/layers/test_fused_shared_expert.py            # E   ValueError: Failed to find a kernel that can implement the MXFP4 linear layer.  缺少 NPU 对应的 MXFP4 量化算子实现
 tests/model_executor/test_sleep_mode_tensor_ownership.py           # skip 以上均 平台不支持
 tests/models/inkling/rocm/test_model_alignment.py                  # AssertionError: Torch not compiled with CUDA enabled
@@ -85,36 +67,28 @@ tests/models/kimi_k3/test_kda.py
 tests/models/kimi_k3/test_kda_metadata.py
 tests/models/kimi_k3/test_latent_moe_tail.py
 tests/models/kimi_k3/test_mla_prefill_context.py                # skip 以上均 平台不支持
-tests/models/kimi_k3/test_sequence_parallel.py                  # --------，显存不够
-tests/models/language/generation/test_gdn_sleep_wake.py         # ---多机待确定-----ValueError: Free memory on device (0.73/29.49 GiB)
-tests/models/language/pooling_mteb_test/test_modernbert_fp8.py  # 重跑  pip install mteb
-tests/models/multimodal/generation/test_gemma_ragged_audio.py    # ---多机-----ValueError: Free
-tests/models/multimodal/generation/test_moondream3_moe.py         # ---多机-----ValueError: Free
-tests/models/multimodal/generation/test_transformers_audio.py     # ---多机-----ValueError: Free
-tests/models/multimodal/generation_ppl_test/test_qwen.py          #重跑----RuntimeError: Failed to load the backend extension: torch_npu. You can disable extension auto-loading with TORCH_DEVICE_BACKEND_AUTOLOAD=0
-tests/models/multimodal/processing/test_transformers_audio.py     # 重跑 看完整报错
-tests/models/multimodal/processing/test_transformers_image.py     # 重跑  RuntimeError: Failed to load the backend extension: torch_npu. You can disable extension auto-loading with TORCH_DEVICE_BACKEND_AUTOLOAD=0.
+tests/models/kimi_k3/test_sequence_parallel.py                  # 根本原因：ParallelConfig 内部计算 use_sequence_parallel_moe 的逻辑与测试的期望不一致。测试认为 data_parallel_size=1 时不应该启用 sequence parallel MoE，但 vLLM 的实际逻辑却启用了。  失败的用例是 [1-False]，即 data_parallel_size=1, expected=False。但从报错信息看，实际得到的 use_sequence_parallel_moe 是 True，而测试期望它是 False。 AssertionError: assert True is False E    +  where True = ParallelConfig(pipeline_parallel_size=1, tensor_parallel_size=2, ... enable_expert_parallel=True, ...).use_sequence_parallel_moe
+tests/models/language/generation/test_gdn_sleep_wake.py         #  这是一个明确的配置冲突问题：vllm-ascend 的 Worker 在 wake_up 时没有处理 FRACTAL_Z 模式与 RL 场景的冲突。可以向 vllm-ascend 社区提交 Issue。 E   ValueError: FRACTAL_Z mode is enabled. This may cause model parameter precision issues in the RL scenarios. Please set weight_nz_mode=0 via --additional-config or enable additional_config.rl config (enabled: true) which disables NZ automatically.
+tests/models/language/pooling_mteb_test/test_modernbert_fp8.py  # 兼容性问题：vllm-ascend 的量化能力映射表没有为 NPU 平台定义 FP8 的支持状态，导致 assert 失败。可以向 vllm-ascend 社区提交 Issue /vllm/tests/models/language/pooling_mteb_test/test_modernbert_fp8.py:20: in _fp8_scaled_mm_unsupported if not is_quant_method_supported("fp8")
+tests/models/multimodal/generation/test_gemma_ragged_audio.py    #   huggingface_hub.errors.GatedRepoError: 403 Client Error.  Cannot access gated repo for url https://hf-mirror.com/google/gemma-3n-E2B-it/resolve/main/config.json
+tests/models/multimodal/generation/test_moondream3_moe.py         # 兼容性 Bug：vllm-ascend 的 calculate_dp_buffer_size() 对 vllm_config 的存在性做了过强的假设，导致在没有完整模型配置的测试场景下直接崩溃。可以向 vllm-ascend 社区提交 Issue，建议他们在补丁中增加对 vllm_config 未设置情况的处理。  AssertionError: Current vLLM config is not set. This typically means get_current_vllm_config() was called outside of a set_current_vllm_config() context, or a CustomOp was instantiated at module import time or model forward time when config is not set. For tests that directly test custom ops/modules, use the 'default_vllm_config' pytest fixture from tests/conftest.py
+tests/models/multimodal/generation/test_transformers_audio.py     #  核心问题是 NPU 上的 FlashAttention 算子执行失败，原因是输入张量的形状不匹配   NPU 算子兼容性问题：torch_npu 的 scaled_dot_product_attention 对 Blip2 模型的输入形状支持不完整。可以向 vllm-ascend 或 torch_npu 社区提交 Issue，附上完整的错误堆栈和张量形状信息
+tests/models/multimodal/processing/test_transformers_audio.py     # FlashAttention 算子形状不匹配（Param_Key of FlashAttentionScore have incorrect shapes  这个音频处理测试文件与 NPU 环境的兼容性不佳
+tests/models/multimodal/processing/test_transformers_image.py     # Client error '403 Forbidden' for url 'https://hf-mirror.com/google/gemma-3-4b-it/resolve/093f9f388b31de276ce2de164bdc2081324b9767/config.json
 tests/models/multimodal/test_mimo_v2_omni.py                      # skip 平台不支持
 tests/models/qwen4_exp/test_hc_ops.py
 tests/models/qwen4_exp/test_qsa_amd.py
 tests/models/qwen4_exp/test_qsa_pre_indexer.py
 tests/models/qwen4_exp/test_qsa_reference.py                      #  skip 以上均 平台不支持
 tests/models/test_deepseek_v4_rocm_compressor_gemm_fusion.py      # 平台不支持  AssertionError: Torch not compiled with CUDA enabled
-tests/models/transformers/test_layer_registry.py                  # ---多机-----ValueError: Free
+tests/models/transformers/test_layer_registry.py                  # failed 不支持 AssertionError: assert {'rms_norm': 'vllm'} == {'rms_norm': ..._mul': 'vllm'}
 tests/platforms/test_cpu.py                                       # cpu 不支持 assert vllm_config.device_config.device_type == "cpu"
-tests/plugins_tests/bitsandbytes/test_bitsandbytes.py             # 重跑  pip install vllm_bnb_plugin     ModuleNotFoundError: No module named 'vllm_bnb_plugin'
-tests/plugins_tests/bitsandbytes/test_transformers.py             # 重跑  pip install vllm_bnb_plugin
+tests/plugins_tests/bitsandbytes/test_bitsandbytes.py             # bitsandbytes 是专门为 NVIDIA CUDA GPU 设计的 8-bit/4-bit 量化库。它依赖 CUDA 的特定内核和 bitsandbytes 的 CUDA 扩展
+tests/plugins_tests/bitsandbytes/test_transformers.py             #  huggingface_hub.errors.GatedRepoError: 403 Client Error  Access to model meta-llama/Llama-3.2-1B-Instruct is restricted and you are not in the authorized list. Visit https://huggingface.co/meta-llama/Llama-3.2-1B-Instruct to ask for access
 tests/quantization/test_humming_mxfp4_block_fp8.py
 tests/quantization/test_int8_moe_oracle.py
 tests/quantization/test_online_mxfp4.py                           #  skip 以上均 平台不支持
-tests/renderers/test_cohere.py                                    # 重跑 ---- RuntimeError: Failed to load the backend extension: torch_npu. You can disable extension auto-loading with TORCH_DEVICE_BACKEND_AUTOLOAD=0
-tests/renderers/test_kimi_k3.py                                   # 重跑 ----同上
-tests/test_audio_media_size_precheck.py                           # 重跑
-tests/test_connections.py                                         # 重跑 ----
-tests/tool_parsers/test_cohere_command_tool_parser.py             # 重跑  ----------
-tests/tool_use/test_kimi_k3_tool_parser.py
-tests/tool_use/test_muse_glimmer.py
-tests/tool_use/test_muse_glimmer_parse_delta.py                   # 重跑 -以上均--------RuntimeError: Failed to load the backend extension: torch_npu. You can disable extension auto-loading with TORCH_DEVICE_BACKEND_AUTOLOAD=0
+tests/tool_use/test_muse_glimmer_parse_delta.py                   # skip 不支持 可能依赖特定的模型或后端（比如 muse_glimmer 模型），而当前 NPU 环境下没有配置这些依赖
 tests/v1/attention/test_cpu_mla_backend.py                        #  skip  平台不支持
 tests/v1/attention/test_cuda_backend_probe_errors.py
 tests/v1/attention/test_flashinfer_mla_dcp.py
@@ -126,27 +100,23 @@ tests/v1/attention/test_sparse_mla_mask.py                        #  skip 以上
 tests/v1/core/test_mamba_align_chunk_split.py                     # *****  vllm-ascend 插件在 Mamba 补丁中直接访问 self.vllm_config，但测试代码中的 self 是 SimpleNamespace，没有这个属性     兼容性问题      AttributeError: 'types.SimpleNamespace' object has no attribute 'vllm_config'
 tests/v1/cudagraph/test_cudagraph_manager.py                      #*******  vllm-ascend 插件的兼容性 Bug    AttributeError: 'InputBuffers' object has no attribute 'seq_lens_np'. Did you mean: 'seq_lens'?
 tests/v1/determinism/test_batch_invariance_vlm.py                 #  skip  平台不支持
-tests/v1/distributed/test_dense_dp_world_size.py                  # 重跑 huggingface ----RuntimeError: Task error: File reconstruction error: CAS Client Error: Request error: HTTP status client error (401 Unauthorized)
-tests/v1/e2e/general/test_sharded_sampling.py                     # 重跑 huggingface  Client error '403 Forbidden' for url 'https://hf-mirror.com/meta-llama/Llama-3.2-1B-In
-tests/v1/e2e/spec_decode/acceptance_rates/dflash/test_dflash.py   # 重跑 多机
-tests/v1/e2e/spec_decode/acceptance_rates/dspark/test_dspark.py   # 重跑 多机
-tests/v1/e2e/spec_decode/acceptance_rates/mtp_other/test_medusa.py  # 重跑 多机
-tests/v1/e2e/spec_decode/acceptance_rates/mtp_other/test_mtp.py     # 重跑 多机
+tests/v1/e2e/general/test_sharded_sampling.py                     # Client error '403 Forbidden' for url 'https://hf-mirror.com/meta-llama/Llama-3.2-1B-Instruct/resolve/main/config.json'
+tests/v1/e2e/spec_decode/acceptance_rates/dflash/test_dflash.py   # ++++ CI 重跑   AssertionError: decode_threshold exceeded npu_fused_infer_attention_score TND layout's limit of 16, got 17
+tests/v1/e2e/spec_decode/acceptance_rates/dspark/test_dspark.py   # ++++ CI 重跑  RuntimeError: copy_d2d_baseformat_opapi: ... PTA call acl api failed[ERROR] ... NPU function error: call aclnnInplaceCopy failed, error code is 561103
+tests/v1/e2e/spec_decode/acceptance_rates/mtp_other/test_mtp.py     # ++++ CI 重跑 RuntimeError: capture_begin:.../torch_npu/csrc/core/npu/NPUGraph.cpp:214 NPU function error: c10_npu::acl::AclmdlRICaptureBegin(capture_stream, capture_mode), error code is 207005 [ERROR] ... Failed to apply for memory. Check the remaining storage space in the hardware environment.
 tests/v1/e2e/spec_decode/acceptance_rates/mtp_other/test_synthetic.py  #  skip  平台不支持
-tests/v1/e2e/spec_decode/draft_model/test_async.py                       # 重跑 多机
-tests/v1/e2e/spec_decode/draft_model/test_draft_model.py              # 重跑 多机
+tests/v1/e2e/spec_decode/draft_model/test_async.py                       # ++++ CI 重跑  RuntimeError: copy_d2d_baseformat
+tests/v1/e2e/spec_decode/draft_model/test_draft_model.py              # Draft Model 投机解码测试，和你之前遇到的 test_dflash.py 类似，都属于 spec_decode 目录，在 NPU 上因为平台限制而跳过
 tests/v1/e2e/spec_decode/draft_model/test_lora.py                      #  skip  平台不支持
 tests/v1/e2e/spec_decode/eagle/test_eagle_correctness.py                # 不支持 vLLM 主仓的这个工具函数只为 CUDA 和 ROCm 平台提供了分支，没有为 Ascend NPU 编写对应逻辑  vllm/tests/utils.py:2216，函数 get_attn_backend_list_based_on_platform() 内部抛出了 ValueError("Unsupported platform")
 tests/v1/e2e/spec_decode/mtp/test_mtp.py                                #  skip  平台不支持
 tests/v1/e2e/spec_decode/ngram_suffix/test_ngram_suffix.py
 tests/v1/e2e/spec_decode/speculators/test_speculators.py               #  skip 以上均 平台不支持
-tests/v1/e2e/spec_decode/test_mtp_parallel_load.py                       # 重跑 多机
-tests/v1/e2e/spec_decode/test_sharded_sampling.py                       # 重跑 多机
-tests/v1/e2e/test_replayssm_decode.py                                  # 重跑 多机
-tests/v1/engine/test_admission_control.py                            # 重跑 --------
-tests/v1/engine/test_startup_watch_processes.py                          # ******  重跑 多机  vllm-ascend 插件的兼容性 Bug  vllm-ascend 插件在 init_ascend_config() 中直接访问 vllm_config.additional_config，但测试代码传入的 SimpleNamespace 没有这个属性。
+tests/v1/e2e/spec_decode/test_mtp_parallel_load.py                       # ++++ CI 重跑  RuntimeError: copy_d2d_baseformat_opa
+tests/v1/e2e/spec_decode/test_sharded_sampling.py                       # ++++ CI 重跑  ValueError: Free memory on device (1.32/29.49 GiB) on startup is less than desired GPU memory utilization (0.92, 27.13 GiB). Decrease GPU m
+tests/v1/engine/test_startup_watch_processes.py                          # vllm-ascend 插件的兼容性 Bug  vllm-ascend 插件在 init_ascend_config() 中直接访问 vllm_config.additional_config，但测试代码传入的 SimpleNamespace 没有这个属性。
 tests/v1/fault_tolerance/test_fault_tolerance_e2e.py                  #  skip  平台不支持
-tests/v1/kv_connector/mooncake_integration/test_accuracy.py           # 重跑 -----pip install lm-eval
+tests/v1/kv_connector/mooncake_integration/test_accuracy.py           # 重跑 Mooncake 或推理服务没有启动
 tests/v1/kv_connector/unit/test_nixl_rocm_gpu_mem_diag.py
 tests/v1/kv_offload/cpu/test_canonical_layout.py
 tests/v1/spec_decode/test_dflash_prepare_inputs.py
