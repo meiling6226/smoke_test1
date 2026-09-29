@@ -1,5 +1,5 @@
 input_file="new.txt"
-log_dir="/home/yf/analyse_log_v0180"
+log_dir="/home/ml/analyse_log_v0300"
 
 while IFS= read -r line; do
     # 拼接完整路径
