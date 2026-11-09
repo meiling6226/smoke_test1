@@ -30,12 +30,25 @@ docker exec -i -e HF_ENDPOINT=https://hf-mirror.com <容器名> hf auth whoami
 
 `whoami` 打印出用户名，且 endpoint 为 `https://hf-mirror.com`，才算登录完成。
 
-## 执行
+## 选择空闲卡
 
-工作目录是容器内 `/home/ml/vllm`。下面这些环境变量每次都要带上。`PYTHONPATH` 只在原值前面加上 `/home/ml/vllm-ascend/tests`，不要整段替换。
+执行前在宿主机跑 `npu-smi info`，不要进容器。这条命令大约两秒就返回。进程表里有进程的卡算占用，没有进程的卡算空闲。
+
+有卡被占用时，只把空闲卡号传进容器，卡号用逗号分隔：
 
 ```bash
-docker exec -i -w /vllm-workspace/vllm <容器名> bash <<'EOF'
+export ASCEND_RT_VISIBLE_DEVICES=4,6,7
+```
+
+上面的数字只是例子，每次按当时的空闲卡号填写。通过 `docker exec -e ASCEND_RT_VISIBLE_DEVICES=...` 传入，并在容器里再 export 一次。全部空闲时不设置这个变量。用例要的卡数多于空闲卡时，仍然只用空闲卡。
+
+## 执行
+
+工作目录是容器内 `/vllm-workspace/vllm`。下面这些环境变量每次都要带上。`PYTHONPATH` 只在原值前面加上 `/vllm-workspace/vllm-ascend/tests`，不要整段替换。需要限制卡时，把 `ASCEND_RT_VISIBLE_DEVICES` 加到 `docker exec -e` 和容器内的 export 里。
+
+```bash
+docker exec -i -e ASCEND_RT_VISIBLE_DEVICES=<空闲卡号> -w /vllm-workspace/vllm <容器名> bash <<'EOF'
+export ASCEND_RT_VISIBLE_DEVICES=<空闲卡号>
 export VLLM_WORKER_MULTIPROC_METHOD=spawn
 export HF_ENDPOINT=https://hf-mirror.com
 export PYTEST_ADDOPTS="-p upstream_test_plugin"
@@ -48,7 +61,9 @@ EOF
 
 跑的过程中出现 401：先查 `hf auth whoami`。未登录或登录失效时，用上面的方式重新登录，再重试该用例一次。
 
-不要为了让用例通过去安装别的依赖版本。
+不要为了让用例通过去安装别的依赖版本。遇到 flashinfer、rocm、nccl、cutlass 相关报错不要安装对应包，按 [known-errors.md](known-errors.md) 记为 `unknown`、`无法执行-后端`。
+
+日志停在加载权重时，先当成本地下载慢，继续跟踪。看缓存里的 `.incomplete` 文件大小和进程读写有没有增加。有增长就继续等。隔一段时间大小和读写都不变，再记成卡住。
 
 ## 判定
 
@@ -60,7 +75,7 @@ EOF
 
 一个用例一时分析不完，或原因不明显：先记下状态，分析写「待分析」，继续跑后面的用例。这一轮都跑完后再回来补分析。
 
-分析失败或 skipped 时再查 [known-errors.md](known-errors.md)，执行用例前不查。能对上就沿用，不要重新分析。新的常见报错追加到该文档。
+分析失败或 skipped 时再查 [known-errors.md](known-errors.md)，执行用例前不查。能对上就沿用，不要重新分析。只有共性问题才追加到该文档，单个用例特有的报错不要写。缺了但可以直接安装的依赖不要写进 known-errors，写到 [installable-missing-deps.md](installable-missing-deps.md)。
 
 ## CSV
 

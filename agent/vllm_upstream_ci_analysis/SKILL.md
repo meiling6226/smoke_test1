@@ -51,7 +51,7 @@ vLLM 自己的设备表或后端表里没有 npu，属于后端不支持。statu
 
 拿不准就问用户。分析先写「待分析」，其余用例继续。这一轮看完后再回来补。
 
-分析失败或 skipped 时再查 [known-errors.md](known-errors.md)。能对上就沿用。新的常见报错追加到该文档。不要沿用执行 skill 里「文件不存在算无法执行-用例」的结论。
+分析失败或 skipped 时再查 [known-errors.md](../vllm-upstream-case-run/known-errors.md)。能对上就沿用。只有共性问题才追加到该文档，单个用例特有的报错不要写。不要另写一份 known-errors。
 
 pytest 报 `file or directory not found`，或退出码 4 且文件不在当次检出的 vLLM 树里：用例已删除。`是否已删除` 填 `是`，原因分类填 `已删除`，status 填 `unknown`。不要填 `无法执行-用例`。
 
