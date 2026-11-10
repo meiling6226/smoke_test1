@@ -69,8 +69,8 @@ EOF
 
 看 pytest 汇总，不要只看退出码。
 
-- 有通过，且没有失败、没有 error：`passed`。其中的 skipped 不用分析。
-- 没有通过也没有失败，全部是 skipped：`skipped`，要分析原因。
+- 有通过，且没有失败、没有 error：`passed`。其中的 skipped 不用分析。 passed 必须真的有 passed 的子测试。
+- 没有通过也没有失败，全部是 skipped：`skipped`，要分析原因。全是 skipped 的文件要改成 skipped。
 - 有失败或 error：整个文件记为 `failed` 或 `unknown`。产品代码问题记 `failed`。不是产品代码的问题记 `unknown`。
 
 一个用例一时分析不完，或原因不明显：先记下状态，分析写「待分析」，继续跑后面的用例。这一轮都跑完后再回来补分析。
