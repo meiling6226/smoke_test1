@@ -1,0 +1,33 @@
+﻿维度,指标,数量,占比,说明/代表用例
+概览,总用例数,381,,来源 upstream_cases_20261106084146.csv
+状态分布,passed,218,57.2%,
+状态分布,skipped,95,24.9%,
+状态分布,unknown,40,10.5%,
+状态分布,failed,28,7.3%,
+状态分布,合计,381,,passed+skipped+unknown+failed 校验一致
+failed根因聚类,①bad_words triton kernel 编译失败,2,0.5%,entrypoints/generate/structured_decisions/test_structured_decisions_e2e.py; entrypoints/scale_out/derender/test_derender_parity.py
+failed根因聚类,②ModelConfig pydantic 校验失败,2,0.5%,entrypoints/launchers/render/test_app_state.py; models/multimodal/processing/test_kimi_k3.py
+failed根因聚类,③vllm-ascend 未实现/不匹配上游接口,5,1.3%,basic_correctness/cpu_offload/test_cpu_offload.py; distributed/test_flashinfer_pcie_ipc_all_reduce.py; model_executor/model_loader/test_weight_cache.py; entrypoints/rl/weight_transfer/test_offline.py; v1/worker/test_gpu_model_runner_prefill_tail_classification.py
+failed根因聚类,④RL 服务端点异常,2,0.5%,entrypoints/rl/state_transitions/test_pause_resume.py; entrypoints/rl/state_transitions/test_weight_checker.py
+failed根因聚类,⑤MTP 投机解码失败,4,1.0%,v1/e2e/spec_decode/mtp/deepseek/test_mtp.py; v1/e2e/spec_decode/mtp/gemma4/test_mtp.py; v1/e2e/spec_decode/mtp/mimo/test_mtp.py; v1/e2e/spec_decode/mtp/qwen3_5/test_mtp.py
+failed根因聚类,⑥数值精度/权重布局差异,4,1.0%,kernels/fla/test_fused_sigmoid_gating_delta_rule.py; kernels/moe/test_fp8_tp_loading.py; models/multimodal/generation_ppl_test/test_glm.py; models/transformers/test_layer_registry_e2e.py
+failed根因聚类,⑦其他功能行为差异,9,2.4%,benchmarks/test_responses_request_func.py; config/test_aux_output_config.py; models/multimodal/test_aria.py; v1/attention/test_flashinfer_mla_sparse_sm90.py; v1/core/prefix_cache/test_partial_prefix_cache_hits.py; v1/e2e/general/test_async_scheduling_accuracy.py; v1/kv_connector/unit/test_hisparse_connector.py; v1/structured_output/test_backend_xgrammar_lark.py; v1/structured_output/test_structured_output_manager.py
+failed根因聚类,合计,28,,占比基于总用例数
+unknown/skipped分类,无法执行-后端,119,31.2%,tests/basic_correctness/memory/cumem/test_cumem.py; tests/basic_correctness/memory/sleep_mode/test_sleep_mode.py; tests/compile/dynamic_shapes/test_dy
+unknown/skipped分类,无法执行-权限,5,1.3%,tests/basic_correctness/models/test_basic_correctness.py; tests/basic_correctness/prefetch_offload/test_prefetch_offload.py; tests/entrypoints/openai/
+unknown/skipped分类,无法执行-依赖,4,1.0%,tests/compile/passes/test_rocm_aiter_qk_norm_rope_kvcache_fusion.py; tests/kernels/mamba/test_gdn_prefill_flashinfer.py; tests/plugins_tests/test_endp
+unknown/skipped分类,无法执行-用例,4,1.0%,tests/model_executor/test_k2_horizon_rope_fold.py; tests/v1/core/prefix_cache/test_mamba_eagle_resume_checkpoint.py; tests/v1/engine/test_engine_core_
+unknown/skipped分类,已删除,3,0.8%,tests/entrypoints/unit_tests/test_offline_utils.py; tests/models/kimi_k3/test_weight_loading.py; tests/renderers/test_chat_utils.py
+skipped明细,有子测试且全部被 skipif 跳过,68,17.8%,按 is_rocm/is_cuda/is_cpu/SM100/CDNA4/DeepEP v2/MoonEP 等平台条件
+skipped明细,collected 0 items（模块级 skip）,27,7.1%,多依赖 has_mori()/has_flashinfer() 等可选组件
+目录分布,tests/v1,129,33.9%,
+目录分布,tests/kernels,55,14.4%,
+目录分布,tests/models,55,14.4%,
+目录分布,tests/entrypoints,34,8.9%,
+目录分布,tests/model_executor,25,6.6%,
+目录分布,tests/parser,16,4.2%,
+目录分布,tests/watermarking,9,2.4%,
+目录分布,tests/distributed,7,1.8%,
+数据质量,疑似假阳性（passed 但最新运行为 skipped）,2,0.5%,tests/lora/test_sequence_classification.py; tests/watermarking/test_parallel_compatibility.py
+数据质量,skipped 未按平台细分,95,24.9%,95 条 skipped 全标为“无法执行-后端”
+数据质量,版本列缺失,371,97.4%,仅 10 条标注 v0.32.0
