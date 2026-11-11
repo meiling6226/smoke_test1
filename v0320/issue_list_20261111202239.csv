@@ -1,0 +1,13 @@
+﻿test_path,issue标题,issue编号
+tests/v1/kv_connector/unit/test_remote_prefill_lifecycle.py,[Bug][Upstream]: Mamba spec block double reserve case failed: tests/v1/kv_connector/unit/test_remote_prefill_lifecycle.py,21609
+tests/parser/mistral/test_tool_calls.py,[Bug][Upstream]: Mistral tool call parser grammar factory case failed: tests/parser/mistral/test_tool_calls.py,21610
+tests/v1/e2e/spec_decode/acceptance_rates/mtp_other/test_medusa.py,[Bug][Upstream]: Medusa acceptance rate case failed: tests/v1/e2e/spec_decode/acceptance_rates/mtp_other/test_medusa.py,21611
+tests/models/test_terratorch.py,[Bug][Upstream]: Terratorch Prithvi inference case failed: tests/models/test_terratorch.py,21612
+tests/v1/spec_decode/test_dflash2.py,[Bug][Upstream]: DFlash2 spec decode case failed: tests/v1/spec_decode/test_dflash2.py,21613
+tests/v1/logits_processors/test_custom_online.py,[Bug][Upstream]: Custom logits processor online case failed: tests/v1/logits_processors/test_custom_online.py,21614
+tests/entrypoints/openai/chat_completion/test_chat_echo.py,[Bug][Upstream]: Chat echo logprobs case failed: tests/entrypoints/openai/chat_completion/test_chat_echo.py,21615
+tests/parser/mistral/test_reasoning.py,[Bug][Upstream]: Mistral reasoning parser case failed: tests/parser/mistral/test_reasoning.py,21616
+tests/tokenizers_/test_mistral.py,[Bug][Upstream]: Mistral tokenizer request validation case failed: tests/tokenizers_/test_mistral.py,21617
+tests/evals/mrcr/test_mrcr_correctness.py,[Bug][Upstream]: MRCR correctness case failed: tests/evals/mrcr/test_mrcr_correctness.py,21618
+tests/model_executor/test_routed_experts_capture.py,[Bug][Upstream]: Routed experts capture case failed: tests/model_executor/test_routed_experts_capture.py,21619
+tests/v1/kv_connector/unit/test_mooncake_store_worker.py,[Bug][Upstream]: Mooncake store worker hash block size case failed: tests/v1/kv_connector/unit/test_mooncake_store_worker.py,21620
