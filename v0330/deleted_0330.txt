@@ -1,0 +1,9 @@
+tests/distributed/test_multi_node_assignment.py
+tests/entrypoints/launchers/test_cli_args.py
+tests/entrypoints/unit_tests/test_offline_utils.py
+tests/models/kimi_k3/test_weight_loading.py
+tests/renderers/test_chat_utils.py
+tests/renderers/test_chat_utils_prompt_embeds.py
+tests/transformers_utils/test_muse_glimmer_config.py
+tests/v1/e2e/spec_decode/acceptance_rates/mtp_other/test_medusa.py
+tests/v1/executor/test_ray_utils.py
