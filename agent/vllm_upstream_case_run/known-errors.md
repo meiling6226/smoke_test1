@@ -64,11 +64,11 @@ status：`unknown`
 
 原因分类：`无法执行-权限`
 
-## flashinfer、rocm、nccl、cutlass
+## flashinfer、rocm、nccl、cutlass、gguf
 
-报错原文里出现 `flashinfer`、`rocm`、`nccl` 或 `cutlass`，大小写不限。例如 `No module named 'flashinfer'`。
+报错原文里出现 `flashinfer`、`rocm`、`nccl`、`cutlass` 或 `gguf`，大小写不限。例如 `No module named 'flashinfer'`，或 `AttributeError: 'GGUFConfig' object has no attribute 'quant_description'`。
 
-结论：当前后端不使用这些组件。直接记为无法执行，不要安装对应包。
+结论：当前后端不使用这些组件，也不支持 GGUF 量化。直接记为无法执行，不要安装对应包。
 
 status：`unknown`
 
