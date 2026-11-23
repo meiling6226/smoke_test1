@@ -73,3 +73,13 @@ status：`unknown`
 status：`unknown`
 
 原因分类：`无法执行-后端`
+
+## mxfp4
+
+报错原文里出现 `mxfp4` 字样，例如 `mxfp4 quantization is currently not supported in npu`。
+
+结论：不支持 mxfp4 量化。直接记为无法执行，不要安装对应包。
+
+status：`unknown`
+
+原因分类：`无法执行-后端`
