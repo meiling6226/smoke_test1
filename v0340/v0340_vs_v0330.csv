@@ -1,0 +1,250 @@
+﻿v0.34.0 vs v0.33.0 上游用例变化（vllm-project/vllm tests/**/test_*.py）,,,,,
+用例数量与变化总结,,,,,
+指标,数值,说明,,,
+v0.34.0 用例文件总数,2049,容器内 /vllm-workspace/vllm,,,
+v0.33.0 用例文件总数,1891,工作目录 vllm，tag v0.33.0,,,
+新增,192,v0.34.0 有 / v0.33.0 无，明细见 new.list,,,
+删除,34,v0.33.0 有 / v0.34.0 无，明细见 deleted.list,,,
+净增,158,2049 - 1891,,,
+同名换目录,0,两侧 basename 无交集,,,
+新增 NPU关注度（高/中/低）,37 / 82 / 73,新增中 37 条高关注，优先评估,,,
+删除 NPU关注度（高/中/低）,22 / 9 / 3,删除中 22 条高关注，需同步清理映射,,,
+新增 平台属性,通用 110 / NVIDIA 47 / AMD 12 / ROCm 6 / XPU 1 / CPU 16,NVIDIA/AMD/ROCm/XPU 为厂商专属，NPU 不适用,,,
+删除 平台属性,通用 32 / NVIDIA 2 / AMD 0 / ROCm 0 / XPU 0 / CPU 0,,,,
+删除且关联 issue,0,,,,
+生成时间,2026-11-25,新版本 v0.34.0 / 对比 tag v0.33.0,,,
+
+删除且关联 issue,,,,,
+类型,test_path,平台属性,NPU关注度,关联issue,分析说明
+
+new.list（新增用例，192 条）,,,,,
+类型,test_path,平台属性,NPU关注度,关联issue,分析说明
+新增,tests/basic_correctness/memory/sleep_mode/test_process_checkpoint.py,通用,中,,新增用例
+新增,tests/benchmarks/sweep/test_server_process.py,通用,低,,新增用例
+新增,tests/benchmarks/test_mm_processor_cli.py,通用,低,,新增用例
+新增,tests/compile/passes/test_muse_glimmer_sandwich_norm_fusion.py,通用,低,,新增用例
+新增,tests/compile/test_depyf_compat.py,通用,低,,新增用例
+新增,tests/compile/test_inductor_operator_str_patch.py,通用,低,,新增用例
+新增,tests/config/test_step5_mtp_config.py,AMD,低,,AMD 专属用例，NPU 不适用
+新增,tests/distributed/test_flashinfer_all_reduce.py,NVIDIA,低,,NVIDIA 专属用例，NPU 不适用
+新增,tests/distributed/test_localization.py,通用,中,,新增用例
+新增,tests/entrypoints/launchers/test_grpc_shutdown.py,通用,高,,入口层新增用例
+新增,tests/entrypoints/openai/completion/test_stream_frame_template.py,通用,高,,入口层新增用例
+新增,tests/entrypoints/tool_parsers/test_functiongemma_tool_parser.py,通用,高,,入口层新增用例
+新增,tests/jit_monitor/test_flydsl_contract.py,通用,低,,新增用例
+新增,tests/kernels/attention/test_fused_mqa_topk.py,通用,中,,attention kernel 新增用例，需确认是否通用
+新增,tests/kernels/attention/test_minimax_m3_index_topk_decode.py,通用,中,,MiniMax-M3 新模型用例
+新增,tests/kernels/attention/test_minimax_m3_norm_rope_nvfp4_insert.py,NVIDIA,低,,NVIDIA 专属用例，NPU 不适用
+新增,tests/kernels/attention/test_minimax_m3_nvfp4_index.py,NVIDIA,低,,NVIDIA 专属用例，NPU 不适用
+新增,tests/kernels/attention/test_minimax_m3_nvfp4_indexer_decode_cp.py,NVIDIA,低,,NVIDIA 专属用例，NPU 不适用
+新增,tests/kernels/attention/test_minimax_m3_nvfp4_prefill_flydsl.py,NVIDIA,低,,NVIDIA 专属用例，NPU 不适用
+新增,tests/kernels/attention/test_minimax_m3_nvfp4_sparse_decode.py,NVIDIA,低,,NVIDIA 专属用例，NPU 不适用
+新增,tests/kernels/attention/test_rocm_aiter_mla_flydsl_fp8_prefill.py,ROCm,低,,ROCm 专属用例，NPU 不适用
+新增,tests/kernels/attention/test_rocm_aiter_mla_prefill_fusions.py,ROCm,低,,ROCm 专属用例，NPU 不适用
+新增,tests/kernels/core/test_fused_pre_fc_norms.py,通用,中,,kernel 新增用例，需确认 NPU 是否具备对应算子
+新增,tests/kernels/core/test_fused_sigmoid_gate_mul.py,通用,中,,kernel 新增用例，需确认 NPU 是否具备对应算子
+新增,tests/kernels/fla/test_chunk_int64_offsets.py,通用,中,,kernel 新增用例，需确认 NPU 是否具备对应算子
+新增,tests/kernels/mamba/test_gather_scatter_states.py,通用,中,,kernel 新增用例，需确认 NPU 是否具备对应算子
+新增,tests/kernels/mamba/test_gdn_chunked_rocm.py,ROCm,低,,ROCm 专属用例，NPU 不适用
+新增,tests/kernels/mamba/test_replayssm_plan.py,通用,中,,kernel 新增用例，需确认 NPU 是否具备对应算子
+新增,tests/kernels/moe/test_lut_b_moe.py,通用,中,,kernel 新增用例，需确认 NPU 是否具备对应算子
+新增,tests/kernels/moe/test_mori_epv2_prepare_finalize.py,通用,中,,kernel 新增用例，需确认 NPU 是否具备对应算子
+新增,tests/kernels/quantization/test_k3_gfx942_int4_requant.py,通用,中,,kernel 新增用例，需确认 NPU 是否具备对应算子
+新增,tests/kernels/test_minimax_m3_dspark_draft.py,通用,中,,MiniMax-M3 新模型用例
+新增,tests/model_executor/layers/test_lmhead_skinny_gemm_guard.py,通用,中,,model_executor 新增用例
+新增,tests/model_executor/model_loader/test_direct_reload.py,通用,中,,model_executor 新增用例
+新增,tests/model_executor/model_loader/test_ep_weight_filter_eplb.py,通用,中,,model_executor 新增用例
+新增,tests/model_executor/model_loader/test_load_plan.py,通用,中,,model_executor 新增用例
+新增,tests/model_executor/model_loader/test_reload_lifecycle.py,通用,中,,model_executor 新增用例
+新增,tests/model_executor/model_loader/test_reload_moe_kernels.py,通用,中,,model_executor 新增用例
+新增,tests/model_executor/model_loader/test_stacked_shard_tracking.py,通用,中,,model_executor 新增用例
+新增,tests/model_executor/test_lfm3.py,通用,中,,LFM3 新用例
+新增,tests/model_executor/test_rocm_aiter_gemm_warmup.py,ROCm,低,,ROCm 专属用例，NPU 不适用
+新增,tests/models/deepseek_v32/test_pp_topk.py,通用,中,,DeepSeek-V3.2 新用例
+新增,tests/models/deepseek_v41/nvidia/specialized_decode/test_all_gather.py,NVIDIA,低,,NVIDIA 专属用例，NPU 不适用
+新增,tests/models/deepseek_v41/nvidia/specialized_decode/test_decode_topk.py,NVIDIA,低,,NVIDIA 专属用例，NPU 不适用
+新增,tests/models/deepseek_v41/nvidia/specialized_decode/test_sparse_mla_cute.py,NVIDIA,低,,NVIDIA 专属用例，NPU 不适用
+新增,tests/models/deepseek_v41/nvidia/test_fused_markov.py,NVIDIA,低,,NVIDIA 专属用例，NPU 不适用
+新增,tests/models/deepseek_v41/nvidia/test_swapab_decode.py,NVIDIA,低,,NVIDIA 专属用例，NPU 不适用
+新增,tests/models/glm5next/test_epd_metadata.py,通用,中,,GLM5-Next 新模型用例
+新增,tests/models/glm5next/test_kda_conv_weight_refit.py,通用,中,,GLM5-Next 新模型用例
+新增,tests/models/glm5next/test_mega_moe.py,通用,中,,GLM5-Next 新模型用例
+新增,tests/models/kimi_k3/nvidia/specialized_decode/test_dcp_fp4_indexer_merge.py,NVIDIA,低,,NVIDIA 专属用例，NPU 不适用
+新增,tests/models/kimi_k3/nvidia/specialized_decode/test_k31_drafter_comm.py,NVIDIA,低,,NVIDIA 专属用例，NPU 不适用
+新增,tests/models/kimi_k3/nvidia/specialized_decode/test_k31_dsa_topk_exchange.py,NVIDIA,低,,NVIDIA 专属用例，NPU 不适用
+新增,tests/models/kimi_k3/nvidia/specialized_decode/test_kimi_k3_sdec_dep.py,NVIDIA,低,,NVIDIA 专属用例，NPU 不适用
+新增,tests/models/kimi_k3/nvidia/specialized_decode/test_kimi_k3_sdec_dep_moe.py,NVIDIA,低,,NVIDIA 专属用例，NPU 不适用
+新增,tests/models/kimi_k3/nvidia/specialized_decode/test_kimi_k3_sdec_ep_comm.py,NVIDIA,低,,NVIDIA 专属用例，NPU 不适用
+新增,tests/models/kimi_k3/nvidia/specialized_decode/test_kimi_k3_sdec_hybrid.py,NVIDIA,低,,NVIDIA 专属用例，NPU 不适用
+新增,tests/models/kimi_k3/nvidia/specialized_decode/test_kimi_k3_sdec_wide_moe.py,NVIDIA,低,,NVIDIA 专属用例，NPU 不适用
+新增,tests/models/kimi_k3/nvidia/specialized_decode/test_kimi_k3_symm_multicast_budget.py,NVIDIA,低,,NVIDIA 专属用例，NPU 不适用
+新增,tests/models/kimi_k3/nvidia/specialized_decode/test_recoverssm_state.py,NVIDIA,低,,NVIDIA 专属用例，NPU 不适用
+新增,tests/models/kimi_k3/nvidia/specialized_decode/test_specialized_decode_dep.py,NVIDIA,低,,NVIDIA 专属用例，NPU 不适用
+新增,tests/models/kimi_k3/nvidia/specialized_decode/test_specialized_decode_draft_attention.py,NVIDIA,低,,NVIDIA 专属用例，NPU 不适用
+新增,tests/models/kimi_k3/nvidia/specialized_decode/test_specialized_decode_drafter.py,NVIDIA,低,,NVIDIA 专属用例，NPU 不适用
+新增,tests/models/kimi_k3/nvidia/specialized_decode/test_specialized_decode_dsa.py,NVIDIA,低,,NVIDIA 专属用例，NPU 不适用
+新增,tests/models/kimi_k3/nvidia/specialized_decode/test_specialized_decode_dsa_sparse.py,NVIDIA,低,,NVIDIA 专属用例，NPU 不适用
+新增,tests/models/kimi_k3/nvidia/specialized_decode/test_specialized_decode_ep_layer.py,NVIDIA,低,,NVIDIA 专属用例，NPU 不适用
+新增,tests/models/kimi_k3/nvidia/specialized_decode/test_specialized_decode_fp4_indexer.py,NVIDIA,低,,NVIDIA 专属用例，NPU 不适用
+新增,tests/models/kimi_k3/nvidia/specialized_decode/test_specialized_decode_kda.py,NVIDIA,低,,NVIDIA 专属用例，NPU 不适用
+新增,tests/models/kimi_k3/nvidia/specialized_decode/test_specialized_decode_kda_commit.py,NVIDIA,低,,NVIDIA 专属用例，NPU 不适用
+新增,tests/models/kimi_k3/nvidia/specialized_decode/test_specialized_decode_kda_fused.py,NVIDIA,低,,NVIDIA 专属用例，NPU 不适用
+新增,tests/models/kimi_k3/nvidia/specialized_decode/test_specialized_decode_kda_recoverssm.py,NVIDIA,低,,NVIDIA 专属用例，NPU 不适用
+新增,tests/models/kimi_k3/nvidia/specialized_decode/test_specialized_decode_kda_wide.py,NVIDIA,低,,NVIDIA 专属用例，NPU 不适用
+新增,tests/models/kimi_k3/nvidia/specialized_decode/test_specialized_decode_linears.py,NVIDIA,低,,NVIDIA 专属用例，NPU 不适用
+新增,tests/models/kimi_k3/nvidia/specialized_decode/test_specialized_decode_mla.py,NVIDIA,低,,NVIDIA 专属用例，NPU 不适用
+新增,tests/models/kimi_k3/nvidia/specialized_decode/test_specialized_decode_moe.py,NVIDIA,低,,NVIDIA 专属用例，NPU 不适用
+新增,tests/models/kimi_k3/nvidia/specialized_decode/test_specialized_decode_prefetch.py,NVIDIA,低,,NVIDIA 专属用例，NPU 不适用
+新增,tests/models/kimi_k3/nvidia/specialized_decode/test_specialized_decode_recoverssm_capture.py,NVIDIA,低,,NVIDIA 专属用例，NPU 不适用
+新增,tests/models/kimi_k3/test_amd_qb_uk_fold.py,AMD,低,,AMD 专属用例，NPU 不适用
+新增,tests/models/kimi_k3/test_dcp_topk_merge.py,通用,中,,Kimi-K3 新模型用例
+新增,tests/models/kimi_k3/test_dsa_indexer_fused.py,通用,中,,Kimi-K3 新模型用例
+新增,tests/models/kimi_k3/test_kda_packed_conv.py,通用,中,,Kimi-K3 新模型用例
+新增,tests/models/kimi_k3/test_kv_balanced_mla.py,通用,中,,Kimi-K3 新模型用例
+新增,tests/models/minimax_m3/test_dense_gemm1_mxfp8.py,通用,中,,MiniMax-M3 新模型用例
+新增,tests/models/minimax_m3/test_dspark_draft_compile.py,通用,中,,MiniMax-M3 新模型用例
+新增,tests/models/minimax_m3/test_dspark_drafter.py,通用,中,,MiniMax-M3 新模型用例
+新增,tests/models/minimax_m3/test_mono_host.py,通用,中,,MiniMax-M3 新模型用例
+新增,tests/models/minimax_m3/test_norm_mxfp8.py,通用,中,,MiniMax-M3 新模型用例
+新增,tests/models/minimax_m3/test_qkv_index_fused_epilogue.py,通用,中,,MiniMax-M3 新模型用例
+新增,tests/models/mistral/mistral_large4/amd_specialized_decode/test_fp8_kv_cache.py,AMD,低,,AMD 专属用例，NPU 不适用
+新增,tests/models/mistral/mistral_large4/amd_specialized_decode/test_runtime.py,AMD,低,,AMD 专属用例，NPU 不适用
+新增,tests/models/mistral/test_fused_ops.py,通用,中,,Mistral 新用例
+新增,tests/models/mistral/test_ml4_dspark.py,通用,中,,Mistral 新用例
+新增,tests/models/multimodal/generation/test_deepseek_ocr.py,通用,中,,多模态生成新增用例
+新增,tests/models/multimodal/generation/test_granite4_vision.py,通用,中,,多模态生成新增用例
+新增,tests/models/multimodal/generation/test_unlimited_ocr.py,通用,中,,多模态生成新增用例
+新增,tests/models/multimodal/processing/test_funaudiochat.py,通用,中,,多模态 processor 新增用例
+新增,tests/models/multimodal/processing/test_lfm3_audio.py,通用,中,,LFM3 新用例
+新增,tests/models/multimodal/processing/test_ming_v3_asr.py,通用,中,,多模态 processor 新增用例
+新增,tests/models/multimodal/processing/test_nemotron3_5_transcribe.py,通用,中,,多模态 processor 新增用例
+新增,tests/models/multimodal/processing/test_qwen2_5_omni.py,通用,中,,多模态 processor 新增用例
+新增,tests/models/qwen3_5/test_fused_allreduce_norm_quant.py,通用,中,,Qwen3.5 新模型用例
+新增,tests/models/qwen3_5/test_gdn_ba_overlap.py,通用,中,,Qwen3.5 新模型用例
+新增,tests/models/qwen3_5/test_gemma_add_rms_norm_quant.py,通用,中,,Qwen3.5 新模型用例
+新增,tests/models/step5/test_amd_csa_metadata.py,AMD,低,,AMD 专属用例，NPU 不适用
+新增,tests/models/step5/test_amd_csa_paged.py,AMD,低,,AMD 专属用例，NPU 不适用
+新增,tests/models/step5/test_amd_csa_warmup.py,AMD,低,,AMD 专属用例，NPU 不适用
+新增,tests/models/step5/test_amd_model.py,AMD,低,,AMD 专属用例，NPU 不适用
+新增,tests/models/step5/test_csa_tail_ring_block_size.py,AMD,低,,AMD 专属用例，NPU 不适用
+新增,tests/models/step5/test_mtp_config.py,AMD,低,,AMD 专属用例，NPU 不适用
+新增,tests/models/step5/test_warmup_dispatch.py,AMD,低,,AMD 专属用例，NPU 不适用
+新增,tests/models/test_deepseek_v4_vl.py,通用,中,,DeepSeek-V4 新用例
+新增,tests/models/test_indexer_logits_dtype_config.py,通用,中,,模型新增用例
+新增,tests/models/test_mimo_v2_attention_backend.py,通用,中,,MiMo 新用例
+新增,tests/models/test_minimax_m3_mega_moe.py,通用,中,,MiniMax-M3 新模型用例
+新增,tests/models/test_muse_spark_nvidia_shared_rope.py,NVIDIA,低,,NVIDIA 专属用例，NPU 不适用
+新增,tests/models/test_muse_spark_rocm_mono.py,ROCm,低,,ROCm 专属用例，NPU 不适用
+新增,tests/models/test_qwen3_5.py,通用,中,,Qwen3.5 新模型用例
+新增,tests/models/test_qwen3_dflash_mxfp8_context_kv.py,通用,中,,模型新增用例
+新增,tests/parser/engine/test_llama_json.py,通用,中,,新增用例
+新增,tests/parser/engine/test_ripple.py,通用,中,,新增用例
+新增,tests/quantization/test_input_hadamard.py,通用,中,,新增用例
+新增,tests/renderers/test_metrics.py,通用,中,,新增用例
+新增,tests/tool_parsers/test_granite_toolcall_parser.py,通用,中,,工具调用解析新增用例
+新增,tests/tool_parsers/test_hy_v4_tool_parser.py,通用,中,,工具调用解析新增用例
+新增,tests/tool_parsers/test_schema_types.py,通用,中,,工具调用解析新增用例
+新增,tests/tool_parsers/test_zaya_tool_parser.py,通用,中,,工具调用解析新增用例
+新增,tests/tools/test_amd_ci_fast_exit.py,AMD,低,,AMD 专属用例，NPU 不适用
+新增,tests/tools/test_dependency_pins.py,通用,低,,新增用例
+新增,tests/tools/test_rocm_build.py,ROCm,低,,ROCm 专属用例，NPU 不适用
+新增,tests/transformers_utils/test_minimax_m3_config.py,通用,中,,MiniMax-M3 新模型用例
+新增,tests/utils_/test_deep_gemm_utils.py,通用,中,,工具类新增用例
+新增,tests/utils_/test_extensible_tensor.py,通用,中,,工具类新增用例
+新增,tests/utils_/test_vmm_driver.py,通用,中,,工具类新增用例
+新增,tests/v1/attention/test_flash_attn_sm90_fp8_mma_selection.py,NVIDIA,低,,NVIDIA 专属用例，NPU 不适用
+新增,tests/v1/attention/test_flashinfer_trtllm_prefill_cudagraph.py,NVIDIA,低,,NVIDIA 专属用例，NPU 不适用
+新增,tests/v1/attention/test_flashinfer_ts.py,NVIDIA,低,,NVIDIA 专属用例，NPU 不适用
+新增,tests/v1/attention/test_kv_sharing_fast_prefill_metadata.py,通用,高,,attention 新增用例
+新增,tests/v1/attention/test_mla_prefill_context_nvfp4.py,NVIDIA,低,,NVIDIA 专属用例，NPU 不适用
+新增,tests/v1/attention/test_mla_prefill_flash_attn.py,NVIDIA,低,,NVIDIA 专属用例，NPU 不适用
+新增,tests/v1/attention/test_shardq.py,通用,高,,attention 新增用例
+新增,tests/v1/attention/test_unlimited_ocr2.py,通用,高,,attention 新增用例
+新增,tests/v1/attention/test_xpu_mla_sparse_backend.py,XPU,低,,XPU 专属用例，NPU 不适用
+新增,tests/v1/core/test_prompt_block_hash_vectors.py,通用,高,,core 新增用例
+新增,tests/v1/cudagraph/test_encoder_only_full_cudagraph.py,NVIDIA,低,,NVIDIA 专属用例，NPU 不适用
+新增,tests/v1/e2e/spec_decode/draft_model/test_draft_weight_reload.py,通用,高,,spec decode 重组后的新用例
+新增,tests/v1/e2e/spec_decode/draft_model/test_structured_output_pp.py,通用,高,,spec decode 重组后的新用例
+新增,tests/v1/e2e/spec_decode/mtp/glm/test_mtp.py,通用,高,,spec decode 重组后的新用例
+新增,tests/v1/e2e/spec_decode/test_distribution_shift.py,通用,高,,spec decode 重组后的新用例
+新增,tests/v1/ec_connector/unit/test_no_nixl_imports.py,通用,高,,EC connector 新增用例
+新增,tests/v1/engine/test_inputs_during_step.py,通用,高,,engine 新增用例
+新增,tests/v1/executor/test_cuda_checkpoint_executor.py,NVIDIA,低,,NVIDIA 专属用例，NPU 不适用
+新增,tests/v1/executor/test_cuda_process_checkpoint.py,NVIDIA,低,,NVIDIA 专属用例，NPU 不适用
+新增,tests/v1/executor/test_future_wrapper_poll.py,通用,高,,executor 新增用例
+新增,tests/v1/fault_tolerance/test_expert_reload.py,通用,高,,容错新增用例
+新增,tests/v1/kv_connector/umbp_integration/test_mori_embedded_gpu.py,通用,高,,UMBP KV 连接器新增用例，NPU 需评估适配
+新增,tests/v1/kv_connector/umbp_integration/test_mori_standalone_gpu.py,通用,高,,UMBP KV 连接器新增用例，NPU 需评估适配
+新增,tests/v1/kv_connector/umbp_integration/test_mori_token_e2e.py,通用,高,,UMBP KV 连接器新增用例，NPU 需评估适配
+新增,tests/v1/kv_connector/unit/test_mooncake_store_cache_prefix.py,通用,高,,Mooncake store 新增用例，NPU 需评估适配
+新增,tests/v1/kv_connector/unit/test_mooncake_store_lookup.py,通用,高,,Mooncake store 新增用例，NPU 需评估适配
+新增,tests/v1/kv_connector/unit/test_umbp_embedded.py,通用,高,,UMBP KV 连接器新增用例，NPU 需评估适配
+新增,tests/v1/kv_connector/unit/test_umbp_standalone.py,通用,高,,UMBP KV 连接器新增用例，NPU 需评估适配
+新增,tests/v1/kv_offload/fs/test_fs_worker.py,通用,高,,KV 卸载新增用例，关注 host 内存与传输适配
+新增,tests/v1/kv_offload/tiering/test_p2p_lifecycle_e2e.py,通用,高,,KV 卸载新增用例，关注 host 内存与传输适配
+新增,tests/v1/logits_processors/test_unlimited_ocr2_page_guard.py,通用,高,,logits processor 新增用例
+新增,tests/v1/sample/test_thinking_token_budget_params.py,通用,高,,sample 新增用例
+新增,tests/v1/simple_kv_offload/test_host_buffer.py,通用,高,,KV 卸载新增用例，关注 host 内存与传输适配
+新增,tests/v1/spec_decode/test_custom_speculator.py,通用,高,,spec decode 重组后的新用例
+新增,tests/v1/spec_decode/test_suffix_speculator.py,通用,高,,spec decode 重组后的新用例
+新增,tests/v1/structured_output/test_grammar_backends.py,通用,高,,结构化输出新增用例
+新增,tests/v1/worker/cpu/test_cpu_attn_utils.py,CPU,中,,CPU 专属用例，NPU 不适用
+新增,tests/v1/worker/cpu/test_cpu_block_table.py,CPU,中,,CPU 专属用例，NPU 不适用
+新增,tests/v1/worker/cpu/test_cpu_ec_connector.py,CPU,中,,CPU 专属用例，NPU 不适用
+新增,tests/v1/worker/cpu/test_cpu_encoder_cache.py,CPU,中,,CPU 专属用例，NPU 不适用
+新增,tests/v1/worker/cpu/test_cpu_encoder_runner.py,CPU,中,,CPU 专属用例，NPU 不适用
+新增,tests/v1/worker/cpu/test_cpu_gumbel_sample.py,CPU,中,,CPU 专属用例，NPU 不适用
+新增,tests/v1/worker/cpu/test_cpu_input_batch.py,CPU,中,,CPU 专属用例，NPU 不适用
+新增,tests/v1/worker/cpu/test_cpu_kv_block_zeroer.py,CPU,中,,CPU 专属用例，NPU 不适用
+新增,tests/v1/worker/cpu/test_cpu_kv_connector.py,CPU,中,,CPU 专属用例，NPU 不适用
+新增,tests/v1/worker/cpu/test_cpu_logit_bias.py,CPU,中,,CPU 专属用例，NPU 不适用
+新增,tests/v1/worker/cpu/test_cpu_logits_processors.py,CPU,中,,CPU 专属用例，NPU 不适用
+新增,tests/v1/worker/cpu/test_cpu_logprob.py,CPU,中,,CPU 专属用例，NPU 不适用
+新增,tests/v1/worker/cpu/test_cpu_lora_utils.py,CPU,中,,CPU 专属用例，NPU 不适用
+新增,tests/v1/worker/cpu/test_cpu_pp_utils.py,CPU,中,,CPU 专属用例，NPU 不适用
+新增,tests/v1/worker/cpu/test_cpu_sampler.py,CPU,中,,CPU 专属用例，NPU 不适用
+新增,tests/v1/worker/cpu/test_cpu_structured_outputs.py,CPU,中,,CPU 专属用例，NPU 不适用
+新增,tests/v1/worker/test_async_output_fault_flag.py,通用,高,,worker 新增用例
+新增,tests/v1/worker/test_conf_compute_streams.py,通用,高,,worker 新增用例
+新增,tests/v1/worker/test_draft_tokens_handler.py,通用,高,,worker 新增用例
+新增,tests/v1/worker/test_extensible_kv_cache.py,通用,高,,worker 新增用例
+新增,tests/v1/worker/test_gpu_diffusion_sampler.py,通用,高,,worker 新增用例
+新增,tests/v1/worker/test_gpu_spec_decode_eagle_utils.py,通用,高,,spec decode 重组后的新用例
+新增,tests/v1/worker/test_mrv2_lmhead_lora.py,通用,高,,worker 新增用例
+
+deleted.list（删除用例，34 条）,,,,,
+类型,test_path,平台属性,NPU关注度,关联issue,分析说明
+删除,tests/compile/test_inductor_fallback_allow_list_patch.py,通用,低,,上游删除该用例
+删除,tests/kernels/quantization/test_mxfp4_qutlass.py,NVIDIA,低,,上游删除该用例
+删除,tests/kernels/quantization/test_nvfp4_qutlass.py,NVIDIA,低,,上游删除该用例
+删除,tests/model_executor/model_loader/test_mtp_validation.py,通用,中,,上游删除该用例
+删除,tests/model_executor/test_keye_mrope.py,通用,中,,上游删除该用例
+删除,tests/model_executor/test_keye_vl1_5_mrope.py,通用,中,,上游删除该用例
+删除,tests/model_executor/test_mamba_triton_warmup.py,通用,中,,上游删除该用例
+删除,tests/models/multimodal/generation/test_keye.py,通用,中,,上游删除该用例
+删除,tests/models/multimodal/test_aria.py,通用,中,,上游删除该用例
+删除,tests/models/test_deepseek_v4_vl_stream_weights.py,通用,中,,上游删除该用例
+删除,tests/spec_decode/test_custom_proposer.py,通用,中,,上游删除该用例
+删除,tests/tool_parsers/test_llama3_json_tool_parser.py,通用,中,,上游删除该用例
+删除,tests/v1/attention/test_batch_reordering.py,通用,高,,上游删除该用例，旧基线映射需同步移除
+删除,tests/v1/attention/test_indexer_tp_row_shard.py,通用,高,,上游删除该用例，旧基线映射需同步移除
+删除,tests/v1/kv_connector/unit/test_kv_connector_lifecycle.py,通用,高,,上游删除该用例，旧基线映射需同步移除
+删除,tests/v1/logits_processors/test_correctness.py,通用,高,,上游删除该用例，旧基线映射需同步移除
+删除,tests/v1/logits_processors/test_custom_offline.py,通用,高,,上游删除该用例，旧基线映射需同步移除
+删除,tests/v1/logits_processors/test_custom_online.py,通用,高,,上游删除该用例，旧基线映射需同步移除
+删除,tests/v1/sample/test_batched_count_greater_than.py,通用,高,,上游删除该用例，旧基线映射需同步移除
+删除,tests/v1/sample/test_rejection_sampler.py,通用,高,,上游删除该用例，旧基线映射需同步移除
+删除,tests/v1/sample/test_sampler.py,通用,高,,上游删除该用例，旧基线映射需同步移除
+删除,tests/v1/sample/test_thinking_budget_state.py,通用,高,,上游删除该用例，旧基线映射需同步移除
+删除,tests/v1/spec_decode/test_eagle.py,通用,高,,上游删除该用例，旧基线映射需同步移除
+删除,tests/v1/spec_decode/test_eagle_step_kernel.py,通用,高,,上游删除该用例，旧基线映射需同步移除
+删除,tests/v1/spec_decode/test_llm_base_proposer.py,通用,高,,上游删除该用例，旧基线映射需同步移除
+删除,tests/v1/spec_decode/test_llm_base_proposer_sampling.py,通用,高,,上游删除该用例，旧基线映射需同步移除
+删除,tests/v1/spec_decode/test_ngram.py,通用,高,,上游删除该用例，旧基线映射需同步移除
+删除,tests/v1/spec_decode/test_vocab_mapping.py,通用,高,,上游删除该用例，旧基线映射需同步移除
+删除,tests/v1/streaming_input/test_gpu_model_runner_streaming.py,通用,高,,上游删除该用例，旧基线映射需同步移除
+删除,tests/v1/worker/test_gpu_input_batch.py,通用,高,,上游删除该用例，旧基线映射需同步移除
+删除,tests/v1/worker/test_gpu_model_runner_mm_gather.py,通用,高,,上游删除该用例，旧基线映射需同步移除
+删除,tests/v1/worker/test_gpu_model_runner_prefill_tail_classification.py,通用,高,,上游删除该用例，旧基线映射需同步移除
+删除,tests/v1/worker/test_grammar_invalid_drafts.py,通用,高,,上游删除该用例，旧基线映射需同步移除
+删除,tests/v1/worker/test_jit_warmup_migration.py,通用,高,,上游删除该用例，旧基线映射需同步移除
