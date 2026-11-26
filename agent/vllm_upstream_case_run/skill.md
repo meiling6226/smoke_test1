@@ -70,10 +70,10 @@ EOF
 看 pytest 汇总，不要只看退出码。
 
 - 有通过，且没有失败、没有 error：`passed`。其中的 skipped 不用分析。 passed 必须真的有 passed 的子测试。
-- 没有通过也没有失败，全部是 skipped：`skipped`，要分析原因。全是 skipped 的文件要改成 skipped。
-- 有失败或 error：整个文件记为 `failed` 或 `unknown`。产品代码问题记 `failed`。不是产品代码的问题记 `unknown`。
+- 没有通过也没有失败，全部是 skipped：`skipped`，要分析原因并标注归属。全是 skipped 的文件要改成 skipped。
+- 有失败或 error：整个文件记为 `failed` 或 `unknown`。vllm-ascend 产品适配缺陷记 `failed` 并归属 `[vllm-ascend]`；上游产品回归记 `failed` 并归属 `[vllm 上游]`；上游用例自身缺陷、第三方依赖不兼容、硬件/算子后端不支持、镜像依赖版本不足、容器网络等记 `unknown`，分别归属 `[vllm 上游]` 或 `[环境]`。
 
-一个用例一时分析不完，或原因不明显：先记下状态，分析写「待分析」，继续跑后面的用例。这一轮都跑完后再回来补分析。
+一个用例一时分析不完，或原因不明显：先记下状态，分析写「待分析」，继续跑后面的用例。这一轮都跑完后再回来补分析和归属。
 
 分析失败或 skipped 时再查 [known-errors.md](known-errors.md)，执行用例前不查。能对上就沿用，不要重新分析。只有共性问题才追加到该文档，单个用例特有的报错不要写。缺了但可以直接安装的依赖不要写进 known-errors，写到 [installable-missing-deps.md](installable-missing-deps.md)。
 
@@ -90,10 +90,20 @@ test_path,status,关键片段,分析,原因分类,版本,是否已删除
 - `test_path`：从 `tests/` 开始的用例文件路径。
 - `status`：只填 `passed`、`failed`、`skipped`、`unknown`。
 - `关键片段`：失败或 skipped 时写一行报错或跳过信息。`passed` 置空。
-- `分析`：用一两句话说明失败或 skipped 的原因。`passed` 置空。
+- `分析`：用一两句话说明失败或 skipped 的**原因**，末尾加一个方括号标注**归属**：`[vllm 上游]` / `[vllm-ascend]` / `[环境]`。`passed` 置空。
 - `原因分类`：`unknown` 和 `skipped` 用下面的分类。`failed` 和 `passed` 置空。
 - `版本`：用户下任务时指定的文字。没指定就置空。
 - `是否已删除`：置空。
+
+`分析` 里的归属判定：
+
+- **`[vllm 上游]`**：报错点在 vLLM 原生代码（未被 vllm-ascend patch 覆盖的路径），或 vLLM 新增 API / 参数 / 设备表未被 NPU 适配同步。例如 conftest 里的 `is_accelerate_available` 判定、transformers 的 `ACCELERATE_MIN_VERSION`、vLLM 设备表没有 npu 键、上游用例自身顺序依赖、上游新增 API 变更而 vllm-ascend 未同步。
+- **`[vllm-ascend]`**：报错点在 vllm\_ascend patch / 算子 / Model Runner / 平台适配代码，或 vllm-ascend 对上游新增字段/接口的适配缺失。例如 `patch_fused_moe` 直读 `use_v2_model_runner`、`GroupCoordinatorPatch` 缺 `backend` 字段、ACLNN 算子层不支持某 dtype、`capture` 缺 `local_sizes` 校验。
+- **`[环境]`**：镜像依赖版本不足（torch transformers accelerate timm 等）、容器网络缺失（IPv6 ::1 未分配）、HF 模型仓离线缓存缺失、镜像 torch 未编译 CUDA、硬件/算子后端不支持（NIXL / profiler / flashinfer / mxfp4 / FP8 等）、显存不足等。不是产品代码 bug，也不是 vllm-ascend 适配缺陷。
+
+归属是**根因位置**，不是 status 的代名词。例如 vLLM 用例自身有问题（断言不合理、顺序依赖）记 `[vllm 上游]`，status 按 product / not product / 环境分别填 `failed` / `unknown` / `unknown`。
+
+如果一条失败同时涉及多个归属，在原因里用顿号并列，归属只写主要根因；不确定时先空着这一项，分析里写清楚，留到这一轮结束统一补上。
 
 原因分类只使用这些值：
 
@@ -103,3 +113,4 @@ test_path,status,关键片段,分析,原因分类,版本,是否已删除
 4. `无法执行-用例`：用例本身有问题。断言不合理、不是 pytest 用例，或用例代码有问题。
 5. `无法执行-显存`：当前环境是 32G。出现 OOM 时先判断 64G 能不能过。判断 64G 仍会 OOM 才用这一类；判断 64G 可能通过时，不使用这一类，把判断写进分析。
 6. `无法执行-环境`：环境问题。这一类很少，目前只用于多机用例和内核不满足要求的用例。
+

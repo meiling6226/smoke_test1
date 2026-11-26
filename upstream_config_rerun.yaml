@@ -4,16 +4,6 @@ e2e-upstream_pr:
 e2e-upstream_singlecard:
   - name: tests/v1/core/test_kv_cache_planning.py
     estimated_time: 20
-  - name: tests/config/test_kv_cache_dtype.py
-    estimated_time: 20
-  - name: tests/v1/structured_output/test_structured_output_manager.py
-    estimated_time: 20
-  - name: tests/v1/kv_connector/unit/test_hisparse_connector.py
-    estimated_time: 20
-  - name: tests/v1/worker/test_gpu_model_runner_prefill_tail_classification.py
-    estimated_time: 20
-  - name: tests/models/language/generation/test_granite.py
-    estimated_time: 20
 e2e-upstream_online_1:
   - name: tests/model_executor/model_loader/runai_streamer_loader/test_runai_model_streamer_s3.py
     estimated_time: 20

@@ -48,7 +48,7 @@ status：`unknown`
 
 报错原文：`ValueError: No common block size for 16 (CUSTOM: [128])`
 
-结论：NPU 算子只支持 block_size 为 128，和用例要求的 16 没有公共 block size。
+结论：NPU 算子只支持 block\_size 为 128，和用例要求的 16 没有公共 block size。
 
 status：`unknown`
 
@@ -79,6 +79,16 @@ status：`unknown`
 报错原文里出现 `mxfp4` 字样，例如 `mxfp4 quantization is currently not supported in npu`。
 
 结论：不支持 mxfp4 量化。直接记为无法执行，不要安装对应包。
+
+status：`unknown`
+
+原因分类：`无法执行-后端`
+
+## FP8
+
+报错原文里出现 `fp8` 字样，例如 `fp8 quantization is currently not supported in npu`。
+
+结论：不支持 FP8 量化、FP8 attention、FP8 sparse attention 等路径。直接记为无法执行，不要强行启用 fp8 执行内核。
 
 status：`unknown`
 
